@@ -16,20 +16,26 @@ using namespace std;
 
 class Object
 {
-private:
+protected:
 	Model3D* model3D;
 	physics::P6Particle particle;
 
+	string name;
+	bool isPaused = false;
+	float race_time = 0.0;
+
 public:
 	//Constructor
-	Object(shared_ptr<VAO> modelVAO);
+	Object(string _name, shared_ptr<VAO> modelVAO);
 	//Destructor
 	~Object();
 
-	void update(float dTime);
+	virtual void update(float dTime);
 	void render(Shader shader, Camera camera);
 	//Getters
 	physics::P6Particle* getParticleAddress();
+	bool getPause();
+	string getName();
 
 	//Setters
 	void setColor(float r, float g, float b);
@@ -37,6 +43,7 @@ public:
 	void setObjPos(float x, float y, float z);
 	void setObjVel(float x, float y, float z);
 	void setObjAcc(float x, float y, float z);
+	void setPause(bool val);
 	void destroy();
 
 	//Physics
@@ -45,26 +52,8 @@ public:
 
 	//Getters
 	physics::Vector getObjPos();
+	float getRaceTime();
 	bool isDestroyed();
-};
-
-class ObjectWorld
-{
-public:
-	physics::ForceRegistry registry;
-
-	std::list<Object*> Objects;
-
-	void AddObject(Object* toAdd);
-	void Update(float dTime);
-	void Render(Shader shader, Camera camera);
-
-	//Silly Functions
-	void atCenter();
-
-private:
-	physics::GravityForceGenerator gravity = physics::GravityForceGenerator(physics::Vector(0, -9.8f, 0));
-	void UpdateObjectList();
 };
 
 #endif

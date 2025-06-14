@@ -1,8 +1,9 @@
 #include "Object.h"
 
 //Constructor
-Object::Object(shared_ptr<VAO> modelVAO)
+Object::Object(string _name, shared_ptr<VAO> modelVAO)
 {
+	name = _name;
 	model3D = new Model3D(modelVAO);
 };
 
@@ -18,14 +19,16 @@ void Object::update(float dTime)
 	//Set the position of the model to the position of its particle component
 	model3D->modelPos = vec3(particle.pos);
 
+	race_time += dTime;
+
 	//	Change color of model based on speed
 	//	Gompertz Growth Equation = a * e^(-Be^(-k(magnitude)))
 	//	a = upper limit
-	//	k = some constant >0
-	//	B = distance of slope from y-axis
-	float a = 1.0f;	//Shader RGB values are from 0.0 -> 1.0
-	float k = 0.075f;
-	float b = 15.f;	// Steepness of curve / How long it takes to get from the lower limit to the upper limit, a.
+	//	k = some constant > 0 ; steepness of curve 
+	//	B = Distance of the base of the slope from y-axis
+	float a = 1.0f;		// Shader RGB values are from 0.0 -> 1.0
+	float k = 0.015f;	// Steepness of curve ; higher the val, the more steep the curve
+	float b = 15.f;		// Distance of the base of the slope from y-axis
 
 	float x = k * particle.vel.mag(); 
 	float be = b * powf(2.718, -x);
@@ -45,6 +48,16 @@ void Object::render(Shader shader, Camera camera)
 physics::P6Particle* Object::getParticleAddress()
 {
 	return &particle;
+}
+
+bool Object::getPause()
+{
+	return isPaused;
+}
+
+string Object::getName()
+{
+	return name;
 }
 
 void Object::setColor(float r, float g, float b)
@@ -73,6 +86,11 @@ void Object::setObjAcc(float x, float y, float z)
 	particle.acc = physics::Vector(x, y, z);
 }
 
+void Object::setPause(bool val)
+{
+	isPaused = val;
+}
+
 void Object::destroy()
 {
 	particle.destroy();
@@ -93,94 +111,9 @@ physics::Vector Object::getObjPos()
 	return particle.pos;
 }
 
+float Object::getRaceTime()
+{
+	return race_time;
+}
+
 bool Object::isDestroyed() { return particle.isDestroyed(); }
-
-// +------------------------ OBJECT WORLD ------------------------+
-
-void ObjectWorld::AddObject(Object* toAdd)
-{
-	physics::P6Particle* p = toAdd->getParticleAddress();
-	Objects.push_back(toAdd);
-	//registry.add(p, &gravity); // Remove Gravity for now
-}
-
-void ObjectWorld::Render(Shader shader, Camera camera)
-{
-	//Render all Objects
-	for (std::list<Object*>::iterator obj = Objects.begin();
-		obj != Objects.end();
-		obj++
-		)
-	{
-		(*obj)->render(shader, camera);
-	}
-}
-
-void ObjectWorld::Update(float dTime)
-{	
-	//Silly Functions
-	//atCenter();
-
-	UpdateObjectList();
-
-	registry.updateForces(dTime);
-
-	//Update all objects
-	for (std::list<Object*>::iterator obj = Objects.begin();
-		obj != Objects.end();
-		obj++
-		)
-	{
-		(*obj)->update(dTime);
-	}
-}
-
-void ObjectWorld::UpdateObjectList()
-{
-	Objects.remove_if(
-		[](Object* obj) {
-			return obj->isDestroyed();
-		}
-	);
-
-}
-
-//Silly Functions
-void ObjectWorld::atCenter()
-{
-	// The distance of the side of a collision box centered at (0,0,0)
-	float side=0.5f;
-
-	// If a particle is at the center, destory particle
-	for (std::list<Object*>::iterator obj = Objects.begin();
-		obj != Objects.end();
-		obj++
-		)
-	{
-		//Define collision box
-		/*
-			
-				"+" is the Center, (0,0,0)
-
-										Upper Right Corner
-				------------------------*
-				|						| 
-				|						| 
-				|						| 
-				|						|
-				| 			+  <-side->	| 
-				|						| 
-				|						| 
-				|						|
-				|						|
-				*------------------------
-				Lower Left Corner
-		*/
-
-		//								Lower Left Corner											Upper Right Corner
-		if ((*obj)->getObjPos() >= physics::Vector(-side,-side,-side) && (*obj)->getObjPos() <= physics::Vector(side,side,side))
-		{
-			(*obj)->destroy();
-		}
-	}
-}

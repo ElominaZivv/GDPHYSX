@@ -16,6 +16,8 @@
 #include "Physics/Vector.h"
 #include "Physics/Particle.h"
 #include "Physics/Object.h"
+#include "Physics/ObjectWorld.h"
+#include "Physics/Player.h"
 
 //My Physics Files
 #include "Physics/ForceGenerator.h"
@@ -25,6 +27,9 @@
 #include "Physics/EastwardForceGenerator.h"
 #include "Physics/EnemyRacerForceGenerator.h"
 #include "Physics/RNG.h"
+
+#include <cstdlib>
+#include <time.h>
 
 using namespace std;
 using namespace glm;
@@ -39,7 +44,6 @@ constexpr::std::chrono::nanoseconds timestep(16ms);
 
 // +------------------------+ DEVELOPER STUFFS +------------------------+
 bool isPaused = false;
-
 
 // +------------------------+ USER INPUTS +------------------------+
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
@@ -56,7 +60,7 @@ int main(void)
         return -1;
 
     /* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(1400,700, "PC01 - Elomina, Zivv", NULL, NULL);
+    window = glfwCreateWindow(1100,500, "PC01 - Elomina, Zivv", NULL, NULL);
     if (!window)
     {
         glfwTerminate();
@@ -67,7 +71,16 @@ int main(void)
     glfwMakeContextCurrent(window);
     gladLoadGL();
 
-    glViewport(0,-350, 1400, 1400);
+    glViewport(0, -300, 1100, 1100);
+
+    // +------------------------ TIME ------------------------+
+    //Initialize the clock and variables
+    using clock = std::chrono::high_resolution_clock;
+    auto curr_time = clock::now();
+    auto prev_time = curr_time;
+    std::chrono::nanoseconds curr_ns(0);
+    //rand() seed
+    srand(time(0));
 
     // +------------------------ GET USER INPUT ------------------------+
     glfwSetKeyCallback(window, key_callback);
@@ -81,23 +94,32 @@ int main(void)
     auto sphereVAO = make_shared<VAO>("3D/sphere.obj");
 
     // +------------------------ DECLARE CAMERA ------------------------+
-    float windowWidth = 700.0f;
-    float windowHeight = 700.0f;
-    float fov = 100.f;
+    float windowWidth = 1100.0f;
+    float windowHeight = 1100.0f;
+    float fov = 550.f;
     Camera orthoCam(windowWidth, windowHeight, fov);
-
+    
     // +------------------------ DECLARE OBJECTS ------------------------+
-    Object sphere1(sphereVAO);
-    Object sphere2(sphereVAO);
-    Object sphere3(sphereVAO);
+    Player player("HaksuneTuwa", sphereVAO);
+    Object sphere1("Gengavitis", sphereVAO);
+    Object sphere2("Adventring", sphereVAO);
+    Object sphere3("BeggaMalls", sphereVAO);
+    player.setSize(5.0f);
+    sphere1.setSize(5.0f);
+    sphere2.setSize(5.0f);
+    sphere3.setSize(5.0f);
 
     // +------------------------ DECLARE OBJECT WORLD ------------------------+
-    ObjectWorld terra;
+    physics::ObjectWorld terra;
+    terra.finishLine = 500.0f;
 
     // +------------------------ OBJECT INITIALIZATIONS ------------------------+
-    sphere1.setObjPos(fov * -0.95f, fov / 4, 0.0);
-    sphere2.setObjPos(fov * -0.95f, 0.0, 0.0);
-    sphere3.setObjPos(fov * -0.95f, fov / -4, 0.0);
+    player.setObjPos(-500.0f, fov / 3, 0.0);
+    sphere1.setObjPos(-500.0f, fov / 9, 0.0);
+    sphere2.setObjPos(-500.0f, fov / -9, 0.0);
+    sphere3.setObjPos(-500.0f, fov / -3, 0.0);
+
+    player.setColor(0.5, 0.0, 1.0);
 
     // +------------------------ DRAG FORCE GENERATORS ------------------------+
         
@@ -107,29 +129,26 @@ int main(void)
     // Rubber On Concrete (race car wheels on race track)                           1.0f    0.8f
     // physics::DragForceGenerator rubberOnConcrete = physics::DragForceGenerator(  1.0f,   0.8f);
 
+    physics::EnemyRacerForceGenerator enemyForce0 = physics::EnemyRacerForceGenerator(1.1, 8.0, fov * 0.1f);
     physics::EnemyRacerForceGenerator enemyForce1 = physics::EnemyRacerForceGenerator(1.1, 8.0, fov * 0.1f);
     physics::EnemyRacerForceGenerator enemyForce2 = physics::EnemyRacerForceGenerator(1.1, 8.0, fov * 0.1f);
     physics::EnemyRacerForceGenerator enemyForce3 = physics::EnemyRacerForceGenerator(1.1, 8.0, fov * 0.1f);
         
     // +------------------------ PUSH OBJECTS INTO OBJECT WORLD ------------------------+
+    terra.AddObject(&player);
     terra.AddObject(&sphere1);
     terra.AddObject(&sphere2);
     terra.AddObject(&sphere3);
     
     // Add the Ice Drag to the force generator registry of ObjectWorld, Terra. 
+    terra.registry.add(player.getParticleAddress(), &IceDrag);
     terra.registry.add(sphere1.getParticleAddress(), &IceDrag);
     terra.registry.add(sphere2.getParticleAddress(), &IceDrag);
     terra.registry.add(sphere3.getParticleAddress(), &IceDrag);
+    terra.registry.add(player.getParticleAddress(), &enemyForce0);
     terra.registry.add(sphere1.getParticleAddress(), &enemyForce1);
     terra.registry.add(sphere2.getParticleAddress(), &enemyForce2);
     terra.registry.add(sphere3.getParticleAddress(), &enemyForce3);
-
-    // +------------------------ TIME ------------------------+
-    //Initialize the clock and variables
-    using clock = std::chrono::high_resolution_clock;
-    auto curr_time = clock::now();
-    auto prev_time = curr_time;
-    std::chrono::nanoseconds curr_ns(0);
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
