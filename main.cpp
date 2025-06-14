@@ -16,12 +16,15 @@
 #include "Physics/Vector.h"
 #include "Physics/Particle.h"
 #include "Physics/Object.h"
+
+//My Physics Files
 #include "Physics/ForceGenerator.h"
 #include "Physics/ForceRegistry.h"
 #include "Physics/GravityForceGenerator.h"
 #include "Physics/DragForceGenerator.h"
 #include "Physics/EastwardForceGenerator.h"
 #include "Physics/EnemyRacerForceGenerator.h"
+#include "Physics/RNG.h"
 
 using namespace std;
 using namespace glm;
@@ -53,7 +56,7 @@ int main(void)
         return -1;
 
     /* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(700,700, "PC01 - Elomina, Zivv", NULL, NULL);
+    window = glfwCreateWindow(1400,700, "PC01 - Elomina, Zivv", NULL, NULL);
     if (!window)
     {
         glfwTerminate();
@@ -64,6 +67,7 @@ int main(void)
     glfwMakeContextCurrent(window);
     gladLoadGL();
 
+    glViewport(0,-350, 1400, 1400);
 
     // +------------------------ GET USER INPUT ------------------------+
     glfwSetKeyCallback(window, key_callback);
@@ -91,13 +95,9 @@ int main(void)
     ObjectWorld terra;
 
     // +------------------------ OBJECT INITIALIZATIONS ------------------------+
-    sphere1.setObjPos(fov * -0.95f, fov / 2, 0.0);
+    sphere1.setObjPos(fov * -0.95f, fov / 4, 0.0);
     sphere2.setObjPos(fov * -0.95f, 0.0, 0.0);
-    sphere3.setObjPos(fov * -0.95f, fov / -2, 0.0);
-
-    sphere1.setSize(2.0f);
-    sphere2.setSize(2.0f);
-    sphere3.setSize(2.0f);
+    sphere3.setObjPos(fov * -0.95f, fov / -4, 0.0);
 
     // +------------------------ DRAG FORCE GENERATORS ------------------------+
         
@@ -107,7 +107,9 @@ int main(void)
     // Rubber On Concrete (race car wheels on race track)                           1.0f    0.8f
     // physics::DragForceGenerator rubberOnConcrete = physics::DragForceGenerator(  1.0f,   0.8f);
 
-    physics::EnemyRacerForceGenerator rightForce = physics::EnemyRacerForceGenerator(10.0f, 100.0f, fov*0.1f);
+    physics::EnemyRacerForceGenerator enemyForce1 = physics::EnemyRacerForceGenerator(1.1, 8.0, fov * 0.1f);
+    physics::EnemyRacerForceGenerator enemyForce2 = physics::EnemyRacerForceGenerator(1.1, 8.0, fov * 0.1f);
+    physics::EnemyRacerForceGenerator enemyForce3 = physics::EnemyRacerForceGenerator(1.1, 8.0, fov * 0.1f);
         
     // +------------------------ PUSH OBJECTS INTO OBJECT WORLD ------------------------+
     terra.AddObject(&sphere1);
@@ -118,9 +120,9 @@ int main(void)
     terra.registry.add(sphere1.getParticleAddress(), &IceDrag);
     terra.registry.add(sphere2.getParticleAddress(), &IceDrag);
     terra.registry.add(sphere3.getParticleAddress(), &IceDrag);
-    terra.registry.add(sphere1.getParticleAddress(), &rightForce);
-    terra.registry.add(sphere2.getParticleAddress(), &rightForce);
-    terra.registry.add(sphere3.getParticleAddress(), &rightForce);
+    terra.registry.add(sphere1.getParticleAddress(), &enemyForce1);
+    terra.registry.add(sphere2.getParticleAddress(), &enemyForce2);
+    terra.registry.add(sphere3.getParticleAddress(), &enemyForce3);
 
     // +------------------------ TIME ------------------------+
     //Initialize the clock and variables

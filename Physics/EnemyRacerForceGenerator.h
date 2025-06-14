@@ -3,6 +3,9 @@
 
 #include "EastwardForceGenerator.h"
 #include "Particle.h"
+#include "RNG.h"
+
+#include <cstdlib>
 
 namespace physics
 {
@@ -10,11 +13,11 @@ namespace physics
 	class EnemyRacerForceGenerator : public EastwardForceGenerator
 	{
 	private:
-		float boostedForce;
+		float boost;
 		float boostThreshold;
 	public:
-		EnemyRacerForceGenerator() {}
-		EnemyRacerForceGenerator(float _force, float _boostedForce, float _boostThreshold) : EastwardForceGenerator(_force), boostedForce(_boostedForce), boostThreshold(_boostThreshold) {};
+		EnemyRacerForceGenerator();
+		EnemyRacerForceGenerator(float lowerMult, float UpperMult, float _boostThreshold);
 		void updateForce(physics::P6Particle* p, float time) override;
 	};
 

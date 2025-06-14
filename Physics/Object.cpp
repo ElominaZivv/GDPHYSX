@@ -23,9 +23,9 @@ void Object::update(float dTime)
 	//	a = upper limit
 	//	k = some constant >0
 	//	B = distance of slope from y-axis
-	float a = 1.0f;
+	float a = 1.0f;	//Shader RGB values are from 0.0 -> 1.0
 	float k = 0.075f;
-	float b = 5.f;
+	float b = 15.f;	// Steepness of curve / How long it takes to get from the lower limit to the upper limit, a.
 
 	float x = k * particle.vel.mag(); 
 	float be = b * powf(2.718, -x);

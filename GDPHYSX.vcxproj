@@ -166,6 +166,7 @@
     <ClCompile Include="Physics\GravityForceGenerator.cpp" />
     <ClCompile Include="Physics\Object.cpp" />
     <ClCompile Include="Physics\Particle.cpp" />
+    <ClCompile Include="Physics\RNG.cpp" />
     <ClCompile Include="Physics\Vector.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -182,6 +183,7 @@
     <ClInclude Include="Physics\GravityForceGenerator.h" />
     <ClInclude Include="Physics\Object.h" />
     <ClInclude Include="Physics\Particle.h" />
+    <ClInclude Include="Physics\RNG.h" />
     <ClInclude Include="Physics\Vector.h" />
   </ItemGroup>
   <ItemGroup>
