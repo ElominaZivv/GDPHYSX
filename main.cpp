@@ -100,10 +100,10 @@ int main(void)
     Camera orthoCam(windowWidth, windowHeight, fov);
     
     // +------------------------ DECLARE OBJECTS ------------------------+
-    Player player("HaksuneTuwa", sphereVAO);
-    Object sphere1("Gengavitis", sphereVAO);
-    Object sphere2("Adventring", sphereVAO);
-    Object sphere3("BeggaMalls", sphereVAO);
+    Player player(  "HaksuneTwa", sphereVAO);
+    Object sphere1( "Gengavitis", sphereVAO);
+    Object sphere2( "Adventring", sphereVAO);
+    Object sphere3( "BeggaMalls", sphereVAO);
     player.setSize(5.0f);
     sphere1.setSize(5.0f);
     sphere2.setSize(5.0f);
@@ -126,10 +126,10 @@ int main(void)
     //Ice
     physics::DragForceGenerator IceDrag = physics::DragForceGenerator(0.14f, 0.1f);
 
-    // Rubber On Concrete (race car wheels on race track)                           1.0f    0.8f
-    // physics::DragForceGenerator rubberOnConcrete = physics::DragForceGenerator(  1.0f,   0.8f);
+    // Rubber On Concrete (race car wheels on race track)                         1.0f    0.8f
+     physics::DragForceGenerator rubberOnConcrete = physics::DragForceGenerator(  1.0f,   0.8f);
 
-    physics::EnemyRacerForceGenerator enemyForce0 = physics::EnemyRacerForceGenerator(1.1, 8.0, fov * 0.1f);
+    // Movement Force Generator
     physics::EnemyRacerForceGenerator enemyForce1 = physics::EnemyRacerForceGenerator(1.1, 8.0, fov * 0.1f);
     physics::EnemyRacerForceGenerator enemyForce2 = physics::EnemyRacerForceGenerator(1.1, 8.0, fov * 0.1f);
     physics::EnemyRacerForceGenerator enemyForce3 = physics::EnemyRacerForceGenerator(1.1, 8.0, fov * 0.1f);
@@ -141,11 +141,22 @@ int main(void)
     terra.AddObject(&sphere3);
     
     // Add the Ice Drag to the force generator registry of ObjectWorld, Terra. 
+
+        //ICE WORLD
     terra.registry.add(player.getParticleAddress(), &IceDrag);
     terra.registry.add(sphere1.getParticleAddress(), &IceDrag);
     terra.registry.add(sphere2.getParticleAddress(), &IceDrag);
     terra.registry.add(sphere3.getParticleAddress(), &IceDrag);
-    terra.registry.add(player.getParticleAddress(), &enemyForce0);
+    
+
+    /*
+        //RUBBER ON CONCRETE WORLD
+    terra.registry.add(player.getParticleAddress(), &rubberOnConcrete);
+    terra.registry.add(sphere1.getParticleAddress(), &rubberOnConcrete);
+    terra.registry.add(sphere2.getParticleAddress(), &rubberOnConcrete);
+    terra.registry.add(sphere3.getParticleAddress(), &rubberOnConcrete);
+    */
+
     terra.registry.add(sphere1.getParticleAddress(), &enemyForce1);
     terra.registry.add(sphere2.getParticleAddress(), &enemyForce2);
     terra.registry.add(sphere3.getParticleAddress(), &enemyForce3);
@@ -167,6 +178,9 @@ int main(void)
 
 
         // +------------------------ UPDATES ------------------------+
+        // GetUserInput
+        player.getUserInput(window);
+
         if (curr_ns >= timestep) // Fixed Updates
         {
             //Convert ns to ms
