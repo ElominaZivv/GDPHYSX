@@ -16,12 +16,13 @@
 #include "Physics/Vector.h"
 #include "Physics/Particle.h"
 #include "Physics/Object.h"
+#include "Physics/ObjectWorld.h"
 #include "Physics/ForceGenerator.h"
 #include "Physics/ForceRegistry.h"
 #include "Physics/GravityForceGenerator.h"
 #include "Physics/DragForceGenerator.h"
-#include "Physics/EastwardForceGenerator.h"
-#include "Physics/EnemyRacerForceGenerator.h"
+#include "Physics/ParticleContact.h"
+#include "Physics/ContactResolver.h"
 
 using namespace std;
 using namespace glm;
@@ -79,48 +80,43 @@ int main(void)
     // +------------------------ DECLARE CAMERA ------------------------+
     float windowWidth = 700.0f;
     float windowHeight = 700.0f;
-    float fov = 100.f;
+    float fov = 500.f;
     Camera orthoCam(windowWidth, windowHeight, fov);
 
     // +------------------------ DECLARE OBJECTS ------------------------+
     Object sphere1(sphereVAO);
     Object sphere2(sphereVAO);
-    Object sphere3(sphereVAO);
 
     // +------------------------ DECLARE OBJECT WORLD ------------------------+
     ObjectWorld terra;
 
     // +------------------------ OBJECT INITIALIZATIONS ------------------------+
-    sphere1.setObjPos(fov * -0.95f, fov / 2, 0.0);
-    sphere2.setObjPos(fov * -0.95f, 0.0, 0.0);
-    sphere3.setObjPos(fov * -0.95f, fov / -2, 0.0);
+    sphere1.setObjPos(-50.0, 0.0, 0.0);
+    sphere1.setMass(5.f);
+    sphere1.setObjVel(80, -15, 0);
+    sphere1.setSize(50.0f);
 
-    sphere1.setSize(2.0f);
-    sphere2.setSize(2.0f);
-    sphere3.setSize(2.0f);
+    sphere2.setObjPos(50.0, 0.0, 0.0);
+    sphere2.setMass(5.f);
+    sphere2.setObjVel(-3, -35, 0);
+    sphere2.setSize(50.0f);
 
-    // +------------------------ DRAG FORCE GENERATORS ------------------------+
+    // +------------------------ FORCE GENERATORS ------------------------+
         
     //Ice
-    physics::DragForceGenerator IceDrag = physics::DragForceGenerator(0.14f, 0.1f);
+    //physics::DragForceGenerator IceDrag = physics::DragForceGenerator(0.14f, 0.1f);
 
     // Rubber On Concrete (race car wheels on race track)                           1.0f    0.8f
     // physics::DragForceGenerator rubberOnConcrete = physics::DragForceGenerator(  1.0f,   0.8f);
-
-    physics::EnemyRacerForceGenerator rightForce = physics::EnemyRacerForceGenerator(10.0f, 100.0f, fov*0.1f);
         
     // +------------------------ PUSH OBJECTS INTO OBJECT WORLD ------------------------+
     terra.AddObject(&sphere1);
     terra.AddObject(&sphere2);
-    terra.AddObject(&sphere3);
-    
-    // Add the Ice Drag to the force generator registry of ObjectWorld, Terra. 
-    terra.registry.add(sphere1.getParticleAddress(), &IceDrag);
-    terra.registry.add(sphere2.getParticleAddress(), &IceDrag);
-    terra.registry.add(sphere3.getParticleAddress(), &IceDrag);
-    terra.registry.add(sphere1.getParticleAddress(), &rightForce);
-    terra.registry.add(sphere2.getParticleAddress(), &rightForce);
-    terra.registry.add(sphere3.getParticleAddress(), &rightForce);
+
+    // +------------------------ PARTICLE CONTACT ------------------------+
+    physics::Vector dir = sphere1.getObjPos() - sphere2.getObjPos();
+    dir.normalize();
+    terra.AddContact(sphere1.getParticleAddress(), sphere2.getParticleAddress(), 1, dir);
 
     // +------------------------ TIME ------------------------+
     //Initialize the clock and variables
@@ -157,7 +153,8 @@ int main(void)
             // If the user pauses the program, it should not update the worlds
             if (!isPaused)
             {
-                terra.Update((float)ms.count() / 1000);
+                float deltaTime = (float)ms.count() / 1000;
+                terra.Update(deltaTime);
             }
         }
         

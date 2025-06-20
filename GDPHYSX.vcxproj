@@ -158,14 +158,15 @@
     <ClCompile Include="HeaderFiles\tiny_obj_loader.cpp" />
     <ClCompile Include="HeaderFiles\VAO.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Physics\ContactResolver.cpp" />
     <ClCompile Include="Physics\DragForceGenerator.cpp" />
-    <ClCompile Include="Physics\EastwardForceGenerator.cpp" />
-    <ClCompile Include="Physics\EnemyRacerForceGenerator.cpp" />
     <ClCompile Include="Physics\ForceGenerator.cpp" />
     <ClCompile Include="Physics\ForceRegistry.cpp" />
     <ClCompile Include="Physics\GravityForceGenerator.cpp" />
     <ClCompile Include="Physics\Object.cpp" />
+    <ClCompile Include="Physics\ObjectWorld.cpp" />
     <ClCompile Include="Physics\Particle.cpp" />
+    <ClCompile Include="Physics\ParticleContact.cpp" />
     <ClCompile Include="Physics\Vector.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -174,14 +175,15 @@
     <ClInclude Include="HeaderFiles\Shader.h" />
     <ClInclude Include="HeaderFiles\tiny_obj_loader.h" />
     <ClInclude Include="HeaderFiles\VAO.h" />
+    <ClInclude Include="Physics\ContactResolver.h" />
     <ClInclude Include="Physics\DragForceGenerator.h" />
-    <ClInclude Include="Physics\EastwardForceGenerator.h" />
-    <ClInclude Include="Physics\EnemyRacerForceGenerator.h" />
     <ClInclude Include="Physics\ForceGenerator.h" />
     <ClInclude Include="Physics\ForceRegistry.h" />
     <ClInclude Include="Physics\GravityForceGenerator.h" />
     <ClInclude Include="Physics\Object.h" />
+    <ClInclude Include="Physics\ObjectWorld.h" />
     <ClInclude Include="Physics\Particle.h" />
+    <ClInclude Include="Physics\ParticleContact.h" />
     <ClInclude Include="Physics\Vector.h" />
   </ItemGroup>
   <ItemGroup>

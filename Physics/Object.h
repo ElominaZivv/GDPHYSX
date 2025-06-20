@@ -34,6 +34,7 @@ public:
 	//Setters
 	void setColor(float r, float g, float b);
 	void setSize(float _size);
+	void setMass(float _mass);
 	void setObjPos(float x, float y, float z);
 	void setObjVel(float x, float y, float z);
 	void setObjAcc(float x, float y, float z);
@@ -46,25 +47,6 @@ public:
 	//Getters
 	physics::Vector getObjPos();
 	bool isDestroyed();
-};
-
-class ObjectWorld
-{
-public:
-	physics::ForceRegistry registry;
-
-	std::list<Object*> Objects;
-
-	void AddObject(Object* toAdd);
-	void Update(float dTime);
-	void Render(Shader shader, Camera camera);
-
-	//Silly Functions
-	void atCenter();
-
-private:
-	physics::GravityForceGenerator gravity = physics::GravityForceGenerator(physics::Vector(0, -9.8f, 0));
-	void UpdateObjectList();
 };
 
 #endif

@@ -21,20 +21,20 @@ void Object::update(float dTime)
 	//	Change color of model based on speed
 	//	Gompertz Growth Equation = a * e^(-Be^(-k(magnitude)))
 	//	a = upper limit
-	//	k = some constant >0
+	//	k = some constant > 0 ; steepness of slope
 	//	B = distance of slope from y-axis
 	float a = 1.0f;
-	float k = 0.075f;
-	float b = 5.f;
+	float k = 0.9f;
+	float b = 2.f;
 
 	float x = k * particle.vel.mag(); 
 	float be = b * powf(2.718, -x);
 	float n = a * powf(2.718, -be);
 
 	float erm = 0.5f;
-	float um = 0.2f;
+	float umm = 0.2f;
 
-	model3D->color = glm::normalize(glm::vec3(n, um+(erm-(n *erm)), 1-n));
+	model3D->color = glm::normalize(glm::vec3(n, umm+(erm-(n *erm)), 1-n));
 }
 
 void Object::render(Shader shader, Camera camera)
@@ -55,6 +55,11 @@ void Object::setColor(float r, float g, float b)
 void Object::setSize(float _size)
 {
 	model3D->setSize(_size);
+}
+
+void Object::setMass(float _mass)
+{
+	particle.mass = _mass;
 }
 
 void Object::setObjPos(float x, float y, float z)
@@ -95,92 +100,3 @@ physics::Vector Object::getObjPos()
 
 bool Object::isDestroyed() { return particle.isDestroyed(); }
 
-// +------------------------ OBJECT WORLD ------------------------+
-
-void ObjectWorld::AddObject(Object* toAdd)
-{
-	physics::P6Particle* p = toAdd->getParticleAddress();
-	Objects.push_back(toAdd);
-	//registry.add(p, &gravity); // Remove Gravity for now
-}
-
-void ObjectWorld::Render(Shader shader, Camera camera)
-{
-	//Render all Objects
-	for (std::list<Object*>::iterator obj = Objects.begin();
-		obj != Objects.end();
-		obj++
-		)
-	{
-		(*obj)->render(shader, camera);
-	}
-}
-
-void ObjectWorld::Update(float dTime)
-{	
-	//Silly Functions
-	//atCenter();
-
-	UpdateObjectList();
-
-	registry.updateForces(dTime);
-
-	//Update all objects
-	for (std::list<Object*>::iterator obj = Objects.begin();
-		obj != Objects.end();
-		obj++
-		)
-	{
-		(*obj)->update(dTime);
-	}
-}
-
-void ObjectWorld::UpdateObjectList()
-{
-	Objects.remove_if(
-		[](Object* obj) {
-			return obj->isDestroyed();
-		}
-	);
-
-}
-
-//Silly Functions
-void ObjectWorld::atCenter()
-{
-	// The distance of the side of a collision box centered at (0,0,0)
-	float side=0.5f;
-
-	// If a particle is at the center, destory particle
-	for (std::list<Object*>::iterator obj = Objects.begin();
-		obj != Objects.end();
-		obj++
-		)
-	{
-		//Define collision box
-		/*
-			
-				"+" is the Center, (0,0,0)
-
-										Upper Right Corner
-				------------------------*
-				|						| 
-				|						| 
-				|						| 
-				|						|
-				| 			+  <-side->	| 
-				|						| 
-				|						| 
-				|						|
-				|						|
-				*------------------------
-				Lower Left Corner
-		*/
-
-		//								Lower Left Corner											Upper Right Corner
-		if ((*obj)->getObjPos() >= physics::Vector(-side,-side,-side) && (*obj)->getObjPos() <= physics::Vector(side,side,side))
-		{
-			(*obj)->destroy();
-		}
-	}
-}
