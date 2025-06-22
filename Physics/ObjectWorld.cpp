@@ -4,7 +4,7 @@ void ObjectWorld::AddObject(Object* toAdd)
 {
 	physics::P6Particle* p = toAdd->getParticleAddress();
 	Objects.push_back(toAdd);
-	//registry.add(p, &gravity); // Remove Gravity for now
+	registry.add(p, &gravity);
 }
 
 void ObjectWorld::Render(Shader shader, Camera camera)
@@ -34,9 +34,6 @@ void ObjectWorld::AddContact(physics::P6Particle* p1, physics::P6Particle* p2, f
 
 void ObjectWorld::Update(float dTime)
 {
-	//Silly Functions
-	//atCenter();
-
 	UpdateObjectList();
 
 	registry.updateForces(dTime);
@@ -64,44 +61,4 @@ void ObjectWorld::UpdateObjectList()
 		}
 	);
 
-}
-
-//Silly Functions
-void ObjectWorld::atCenter()
-{
-	// The distance of the side of a collision box centered at (0,0,0)
-	float side = 0.5f;
-
-	// If a particle is at the center, destory particle
-	for (std::list<Object*>::iterator obj = Objects.begin();
-		obj != Objects.end();
-		obj++
-		)
-	{
-		//Define collision box
-		/*
-
-				"+" is the Center, (0,0,0)
-
-										Upper Right Corner
-				------------------------*
-				|						|
-				|						|
-				|						|
-				|						|
-				| 			+  <-side->	|
-				|						|
-				|						|
-				|						|
-				|						|
-				*------------------------
-				Lower Left Corner
-		*/
-
-		//								Lower Left Corner											Upper Right Corner
-		if ((*obj)->getObjPos() >= physics::Vector(-side, -side, -side) && (*obj)->getObjPos() <= physics::Vector(side, side, side))
-		{
-			(*obj)->destroy();
-		}
-	}
 }

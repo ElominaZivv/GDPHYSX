@@ -34,15 +34,12 @@ using namespace std::chrono_literals;
 // We will call this our time between "frames"
 constexpr::std::chrono::nanoseconds timestep(16ms);
 
-
-// +------------------------+ DEVELOPER STUFFS +------------------------+
 bool isPaused = false;
-
 
 // +------------------------+ USER INPUTS +------------------------+
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-    if (key == GLFW_KEY_TAB && action == GLFW_PRESS) isPaused = !isPaused;
+    if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) isPaused = !isPaused;
 }
 
 int main(void)
@@ -54,7 +51,7 @@ int main(void)
         return -1;
 
     /* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(700,700, "PC01 - Elomina, Zivv", NULL, NULL);
+    window = glfwCreateWindow(700,700, "Phase1_Grouping2_Chen-Elomina-Naranjo", NULL, NULL);
     if (!window)
     {
         glfwTerminate();
@@ -65,9 +62,8 @@ int main(void)
     glfwMakeContextCurrent(window);
     gladLoadGL();
 
-
-    // +------------------------ GET USER INPUT ------------------------+
-    glfwSetKeyCallback(window, key_callback);
+    // +------------------------ SET THE SEED OF THE RAND() ------------------------+
+    srand(time(0));
 
     // +------------------------ DECLARE SHADERS ------------------------+
     Shader shader("Shaders/solidColorShader.vert", "Shaders/solidColorShader.frag");
@@ -78,10 +74,10 @@ int main(void)
     auto sphereVAO = make_shared<VAO>("3D/sphere.obj");
 
     // +------------------------ DECLARE CAMERA ------------------------+
-    float windowWidth = 700.0f;
-    float windowHeight = 700.0f;
-    float fov = 500.f;
-    Camera orthoCam(windowWidth, windowHeight, fov);
+    float windowWidth = 800.0f;
+    float windowHeight = 800.0f;
+    float fov = 800.f;
+    Camera generalCamera(windowWidth, windowHeight, fov);
 
     // +------------------------ DECLARE OBJECTS ------------------------+
     Object sphere1(sphereVAO);
@@ -92,14 +88,8 @@ int main(void)
 
     // +------------------------ OBJECT INITIALIZATIONS ------------------------+
     sphere1.setObjPos(-50.0, 0.0, 0.0);
-    sphere1.setMass(5.f);
-    sphere1.setObjVel(80, -15, 0);
-    sphere1.setSize(50.0f);
 
     sphere2.setObjPos(50.0, 0.0, 0.0);
-    sphere2.setMass(5.f);
-    sphere2.setObjVel(-3, -35, 0);
-    sphere2.setSize(50.0f);
 
     // +------------------------ FORCE GENERATORS ------------------------+
         
@@ -140,8 +130,12 @@ int main(void)
         //to the time since our last "frame"
         curr_ns += dur;
 
+        // +------------------------ GET USER INPUT ------------------------+
+        glfwSetKeyCallback(window, key_callback);   //  Pause
+        generalCamera.getUserInput(window);         //  Camera Controls
 
         // +------------------------ UPDATES ------------------------+
+        generalCamera.update();
         if (curr_ns >= timestep) // Fixed Updates
         {
             //Convert ns to ms
@@ -164,7 +158,7 @@ int main(void)
         glClear(GL_COLOR_BUFFER_BIT);
 
         // Render all objects
-        terra.Render(shader, orthoCam);
+        terra.Render(shader, generalCamera);
 
         // +--------------------------------------------------------------------------------------------------------------------------+
 
@@ -178,22 +172,3 @@ int main(void)
     glfwTerminate();
     return 0;
 }
-
-/*
-    May 23, 2025
-    Particle / Point Mass
-     - No Radius
-     - No Size
-     - No Rotation
-
-     - Mass
-     - Position
-     - Velocity
-     - Acceleration
-     - Aside from mass- everything is a Vector
-
-     Keep everything in scale
-     length = meters
-     mass = kilogram
-     time = seconds
-*/

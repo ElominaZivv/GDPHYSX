@@ -13,12 +13,16 @@ using namespace std;
 #include "Particle.h"
 #include "ForceRegistry.h"
 #include "GravityForceGenerator.h"
+#include "RNG.h"
 
 class Object
 {
 private:
 	Model3D* model3D;
 	physics::P6Particle particle;
+
+	//Phase1
+	float lifeSpan=100;
 
 public:
 	//Constructor
@@ -28,8 +32,20 @@ public:
 
 	void update(float dTime);
 	void render(Shader shader, Camera camera);
+
+	//Phase 1
+	void RandomizeColor();
+	void RandomizeRadius();
+	void RandomizeLifeSpan();
+	void CheckLifeSpan();
+
+	//Sillies
+	void MySillyFunctionThatChangesTheColorOfTheModelBasedOnItsSpeed();
+
 	//Getters
 	physics::P6Particle* getParticleAddress();
+	physics::Vector getObjPos();
+	bool isDestroyed();
 
 	//Setters
 	void setColor(float r, float g, float b);
@@ -43,10 +59,6 @@ public:
 	//Physics
 	void addForce(physics::Vector force);
 	void resetForce();
-
-	//Getters
-	physics::Vector getObjPos();
-	bool isDestroyed();
 };
 
 #endif

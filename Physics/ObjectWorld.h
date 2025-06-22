@@ -34,9 +34,6 @@ public:
 	void Update(float dTime);
 	void Render(Shader shader, Camera camera);
 
-	//Silly Functions
-	void atCenter();
-
 private:
 	physics::GravityForceGenerator gravity = physics::GravityForceGenerator(physics::Vector(0, -9.8f, 0));
 	void UpdateObjectList();

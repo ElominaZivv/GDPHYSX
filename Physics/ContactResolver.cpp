@@ -4,6 +4,9 @@ namespace physics
 {
 	void ContactResolver::ResolveContacts(std::vector<ParticleContact*> contacts, float time)
 	{
+		// AUAUUGHHH
+
+		/*
 		std::sort(contacts.begin(), contacts.end(), [](const ParticleContact*& a, const ParticleContact*& b) {
 			return a < b;
 		});
@@ -16,5 +19,6 @@ namespace physics
 			}
 			current_iterations++;
 		}
+		*/
 	}
 }	
