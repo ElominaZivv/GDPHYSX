@@ -8,12 +8,12 @@ namespace physics
 	class ParticleContact
 	{
 	public:
-		bool operator<(ParticleContact& p);
 		P6Particle* particles[2];
 		float separatingSpeed=0;
 		float restitution;
 		Vector contactNormal;
 		void Resolve(float time);
+		float RetrieveSeparatingSpeed();
 
 	protected:
 		float GetSeparatingSpeed();

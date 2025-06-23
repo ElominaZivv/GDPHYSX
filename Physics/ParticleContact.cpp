@@ -1,13 +1,13 @@
 #include "ParticleContact.h"
 
-bool physics::ParticleContact::operator<(ParticleContact& p)
-{
-	return separatingSpeed < p.separatingSpeed;
-}
-
 void physics::ParticleContact::Resolve(float time)
 {
 	ResolveVelocity(time);
+}
+
+float physics::ParticleContact::RetrieveSeparatingSpeed()
+{
+	return GetSeparatingSpeed();
 }
 
 float physics::ParticleContact::GetSeparatingSpeed()
