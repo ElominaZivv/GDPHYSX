@@ -7,8 +7,8 @@ Camera::Camera(float newWindowWidth, float newWindowHeight, float _fov)
 	this->fov = _fov;
 
 	worldUp = normalize(vec3(0.f, 1.f, 0.f));
-	position = vec3(0.f, 0.f, 500.f);
-	cameraGaze = vec3(0.f, 0.f, 0.f); // Gaze is where the camera is looking.
+	position = vec3(0.f, 0.f, 0);
+	cameraGaze = vec3(0, 0.f, 0.f); // Gaze is where the camera is looking.=
 	viewMatrix = lookAt(position, cameraGaze, worldUp);
 	//Orthographic Camera by default
 	perspectiveCam = false;
@@ -39,7 +39,7 @@ void Camera::update()
 	if (perspectiveCam)
 	{
 		projectionMatrix = perspective(
-			(fov),				//This is your FOV
+			radians(fov),				//This is your FOV
 			windowHeight / windowWidth, //Aspect ratio
 			zNear,                      //z-Near, should never be <= 0
 			zFar						//z-Far   
