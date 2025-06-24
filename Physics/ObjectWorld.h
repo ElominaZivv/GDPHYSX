@@ -8,6 +8,7 @@
 
 #include <iostream>
 #include <string>
+#include <random>
 
 using namespace std;
 #include "Particle.h"
@@ -35,6 +36,8 @@ public:
 	void Render(Shader shader, Camera camera);
 
 private:
+	int renderedObject = 0;
+	float renderTimer = 0.f;
 	physics::GravityForceGenerator gravity = physics::GravityForceGenerator(physics::Vector(0, -9.8f, 0));
 	void UpdateObjectList();
 };
