@@ -166,7 +166,6 @@ int main(void)
             //std::cout << "FixedUpdate MS: " << (float)ms.count() << std::endl;
             //Reset
             curr_ns -= curr_ns;
-
             // If the user pauses the program, it should not update the worlds
             if (!isPaused)
             {
