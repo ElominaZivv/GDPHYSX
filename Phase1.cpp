@@ -87,6 +87,7 @@ int main(void)
 
     random_device random;
     uniform_real_distribution<float> force(-10000.f, 10000.f);
+    float minimumAmplitude = 5000.f;
     int maxSparks;
     cout << "Set Amount Of Sparks: ";
     cin >> maxSparks;
@@ -97,9 +98,9 @@ int main(void)
         Object *newSphere = new Object(sphereVAO);
         newSphere->setObjPos(0, -700, 0);
         spheres.push_back(newSphere);
-        physics::Vector forceVector = physics::Vector(force(random), force(random), force(random));
+        physics::Vector forceVector = physics::Vector(force(random), std::abs(force(random)) + minimumAmplitude, force(random));
         forceVector.normalize();
-        newSphere->addForce(forceVector * force(random));
+        newSphere->addForce(forceVector * std::abs(force(random)));
     }
     //Object sphere1(sphereVAO);
     //Object sphere2(sphereVAO);
