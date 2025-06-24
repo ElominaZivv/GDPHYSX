@@ -1,4 +1,6 @@
 #include <iostream>
+#include <vector>
+#include <random>
 #include <list>
 #include <memory>
 #include <glad/glad.h>
@@ -80,16 +82,34 @@ int main(void)
     Camera generalCamera(windowWidth, windowHeight, fov);
 
     // +------------------------ DECLARE OBJECTS ------------------------+
-    Object sphere1(sphereVAO);
-    Object sphere2(sphereVAO);
+
+        // things i changed
+
+    random_device random;
+    uniform_real_distribution<float> pos(0.f, 800.f);
+    int maxSparks;
+    cout << "Set Amount Of Sparks: ";
+    cin >> maxSparks;
+
+    vector<Object*> spheres;
+
+    for (int i = 0; i < maxSparks; i++) {
+        Object *newSphere = new Object(sphereVAO);
+        newSphere->setObjPos(pos(random), pos(random), pos(random));
+        spheres.push_back(newSphere);
+    }
+    //Object sphere1(sphereVAO);
+    //Object sphere2(sphereVAO);
 
     // +------------------------ DECLARE OBJECT WORLD ------------------------+
     ObjectWorld terra;
 
     // +------------------------ OBJECT INITIALIZATIONS ------------------------+
-    sphere1.setObjPos(-50.0, 0.0, 0.0);
+    // 
+    //things i changed
+    //sphere1.setObjPos(-50.0, 0.0, 0.0);
 
-    sphere2.setObjPos(50.0, 0.0, 0.0);
+    //sphere2.setObjPos(50.0, 0.0, 0.0);
 
     // +------------------------ FORCE GENERATORS ------------------------+
         
@@ -100,13 +120,11 @@ int main(void)
     // physics::DragForceGenerator rubberOnConcrete = physics::DragForceGenerator(  1.0f,   0.8f);
         
     // +------------------------ PUSH OBJECTS INTO OBJECT WORLD ------------------------+
-    terra.AddObject(&sphere1);
-    terra.AddObject(&sphere2);
-
-    // +------------------------ PARTICLE CONTACT ------------------------+
-    physics::Vector dir = sphere1.getObjPos() - sphere2.getObjPos();
-    dir.normalize();
-    terra.AddContact(sphere1.getParticleAddress(), sphere2.getParticleAddress(), 1, dir);
+    //terra.AddObject(&sphere1);
+    //terra.AddObject(&sphere2);
+    for (int i = 0; i < spheres.size(); i++) {
+        terra.AddObject(spheres[i]);
+    }
 
     // +------------------------ TIME ------------------------+
     //Initialize the clock and variables
