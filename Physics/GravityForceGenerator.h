@@ -8,7 +8,7 @@ namespace physics
 	class GravityForceGenerator : public ForceGenerator
 	{
 	private:
-		physics::Vector gravity = physics::Vector(0, -9.8f, 0);
+		physics::Vector gravity = physics::Vector(0, -9.8, 0);
 
 	public:
 		GravityForceGenerator(const physics::Vector gravity) : gravity(gravity) {}

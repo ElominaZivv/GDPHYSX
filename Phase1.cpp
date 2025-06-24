@@ -53,7 +53,7 @@ int main(void)
         return -1;
 
     /* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(700,700, "Phase1_Grouping2_Chen-Elomina-Naranjo", NULL, NULL);
+    window = glfwCreateWindow(800,800, "Phase1_Grouping2_Chen-Elomina-Naranjo", NULL, NULL);
     if (!window)
     {
         glfwTerminate();
@@ -86,7 +86,7 @@ int main(void)
         // things i changed
 
     random_device random;
-    uniform_real_distribution<float> pos(0.f, 800.f);
+    uniform_real_distribution<float> force(-10000.f, 10000.f);
     int maxSparks;
     cout << "Set Amount Of Sparks: ";
     cin >> maxSparks;
@@ -95,8 +95,11 @@ int main(void)
 
     for (int i = 0; i < maxSparks; i++) {
         Object *newSphere = new Object(sphereVAO);
-        newSphere->setObjPos(pos(random), pos(random), pos(random));
+        newSphere->setObjPos(0, -700, 0);
         spheres.push_back(newSphere);
+        physics::Vector forceVector = physics::Vector(force(random), force(random), force(random));
+        forceVector.normalize();
+        newSphere->addForce(forceVector * force(random));
     }
     //Object sphere1(sphereVAO);
     //Object sphere2(sphereVAO);
@@ -124,6 +127,7 @@ int main(void)
     //terra.AddObject(&sphere2);
     for (int i = 0; i < spheres.size(); i++) {
         terra.AddObject(spheres[i]);
+        /*terra.registry.add(spheres[i]->addForce(force(random)));*/
     }
 
     // +------------------------ TIME ------------------------+
