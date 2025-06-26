@@ -24,7 +24,6 @@
 #include "Physics/GravityForceGenerator.h"
 #include "Physics/DragForceGenerator.h"
 #include "Physics/ParticleContact.h"
-#include "Physics/ContactResolver.h"
 
 using namespace std;
 using namespace glm;
@@ -82,9 +81,6 @@ int main(void)
     Camera generalCamera(windowWidth, windowHeight, fov);
 
     // +------------------------ DECLARE OBJECTS ------------------------+
-
-        // things i changed
-
     random_device random;
     uniform_real_distribution<float> force(-10000.f, 10000.f);
     float minimumAmplitude = 5000.f;
@@ -99,34 +95,10 @@ int main(void)
         newSphere->setObjPos(0, -700, 0);
         spheres.push_back(newSphere);
     }
-    //Object sphere1(sphereVAO);
-    //Object sphere2(sphereVAO);
 
     // +------------------------ DECLARE OBJECT WORLD ------------------------+
     ObjectWorld terra;
-
-    // +------------------------ OBJECT INITIALIZATIONS ------------------------+
-    // 
-    //things i changed
-    //sphere1.setObjPos(-50.0, 0.0, 0.0);
-
-    //sphere2.setObjPos(50.0, 0.0, 0.0);
-
-    // +------------------------ FORCE GENERATORS ------------------------+
-        
-    //Ice
-    //physics::DragForceGenerator IceDrag = physics::DragForceGenerator(0.14f, 0.1f);
-
-    // Rubber On Concrete (race car wheels on race track)                           1.0f    0.8f
-    // physics::DragForceGenerator rubberOnConcrete = physics::DragForceGenerator(  1.0f,   0.8f);
-        
-    // +------------------------ PUSH OBJECTS INTO OBJECT WORLD ------------------------+
-    //terra.AddObject(&sphere1);
-    //terra.AddObject(&sphere2);
-    for (int i = 0; i < spheres.size(); i++) {
-        terra.AddObject(spheres[i]);
-        /*terra.registry.add(spheres[i]->addForce(force(random)));*/
-    }
+    int i = 0;
 
     // +------------------------ TIME ------------------------+
     //Initialize the clock and variables
@@ -166,6 +138,11 @@ int main(void)
             // If the user pauses the program, it should not update the worlds
             if (!isPaused)
             {
+                if (i < spheres.size()) {
+                    terra.AddObject(spheres[i]);
+                    i++;
+                }
+
                 float deltaTime = (float)ms.count() / 1000;
                 terra.Update(deltaTime);
             }

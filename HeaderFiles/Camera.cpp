@@ -7,9 +7,10 @@ Camera::Camera(float newWindowWidth, float newWindowHeight, float _fov)
 	this->fov = _fov;
 
 	worldUp = normalize(vec3(0.f, 1.f, 0.f));
-	position = vec3(0.f, 0.f, 0);
-	cameraGaze = vec3(0, 0.f, 0.f); // Gaze is where the camera is looking.=
+	position = vec3(0.f, 0.f, 0.f);
+	cameraGaze = vec3(0,-700.f, 0.f); // Gaze is where the camera is looking
 	viewMatrix = lookAt(position, cameraGaze, worldUp);
+	distance = 1300;
 	//Orthographic Camera by default
 	perspectiveCam = false;
 	orthoCam = true;
@@ -20,8 +21,15 @@ Camera::Camera(float newWindowWidth, float newWindowHeight, float _fov)
 		fov,
 		-fov,
 		fov,
-		-fov,
-		fov
+		zNear,
+		zFar
+	);
+
+	projectionMatrix = perspective(
+		radians(fov),				//This is your FOV
+		windowHeight / windowWidth, //Aspect ratio
+		zNear,                      //z-Near, should never be <= 0
+		zFar						//z-Far   
 	);
 }
 
@@ -33,20 +41,30 @@ void Camera::update()
 		projectionMatrix = ortho(
 			-fov, fov,
 			-fov, fov,
-			-fov, fov
+			zNear, zFar
 		);
 	}
 	if (perspectiveCam)
 	{
 		projectionMatrix = perspective(
-			radians(fov),				//This is your FOV
+			radians(60.f),				//This is your FOV
 			windowHeight / windowWidth, //Aspect ratio
 			zNear,                      //z-Near, should never be <= 0
 			zFar						//z-Far   
 		);
 	}
 
-	viewMatrix = lookAt(vec3(sin(position.x), tan(clamp(position.y, -1.f, 1.f)), cos(position.x)), cameraGaze, worldUp);
+	/*
+	
+	physics::Vector dir = physics::Vector(sin(position.x), tan(position.y), cos(position.x)).dir() * distance;
+	//position = vec3(sin(position.x) + dir.x, tan(position.y) + dir.y, cos(position.x) + dir.z);
+
+	viewMatrix = lookAt(vec3(sin(position.x) + dir.x, tan(position.y) + dir.y, cos(position.x) + dir.z), cameraGaze, worldUp);
+	//viewMatrix = lookAt(vec3(position.x), cameraGaze, worldUp);
+	
+	*/
+
+	viewMatrix = lookAt(position, cameraGaze, worldUp);
 }
 
 void Camera::getUserInput(GLFWwindow* window) {
@@ -62,17 +80,35 @@ void Camera::getUserInput(GLFWwindow* window) {
 		perspectiveCam = true;
 	}
 	if (glfwGetKey(window, GLFW_KEY_A)) {
-		position.x -= 0.01f;
+		//position.x -= .01f * distance;
+		thetaX -= 0.1f;
 	}
 	if (glfwGetKey(window, GLFW_KEY_D)) {
-		position.x += 0.01f;
-	}
-	if (glfwGetKey(window, GLFW_KEY_S)) {
-		if (position.y < 1.f) position.y += 0.01f;
+		//position.x += .01f * distance;
+		thetaX += 0.1f;
 	}
 	if (glfwGetKey(window, GLFW_KEY_W)) {
-		if (position.y > -1.f) position.y -= 0.01f;
+		//position.y += .01f * distance;
+		if (thetaY > -89.0f) thetaY -= 0.1f;
 	}
+	if (glfwGetKey(window, GLFW_KEY_S)) {
+		//position.y -= .01f * distance;
+		if (thetaY < 89.0f) thetaY += 0.1f;
+	}
+	if (glfwGetKey(window, GLFW_KEY_Q)) {
+		distance += 1.f;
+	}
+	if (glfwGetKey(window, GLFW_KEY_E)) {
+		distance -= 1.f;
+	}
+
+
+	float groundDist = distance * cos(radians(thetaY));
+	position = vec3(
+		cameraGaze.x + (groundDist * sin(radians(thetaX))),
+		cameraGaze.y + (-distance * sin(radians(thetaY))),
+		cameraGaze.z + (groundDist * cos(radians(thetaX)))
+	);
 }
 
 void Camera::toggleCam()

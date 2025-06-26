@@ -158,7 +158,6 @@
     <ClCompile Include="HeaderFiles\tiny_obj_loader.cpp" />
     <ClCompile Include="HeaderFiles\VAO.cpp" />
     <ClCompile Include="Phase1.cpp" />
-    <ClCompile Include="Physics\ContactResolver.cpp" />
     <ClCompile Include="Physics\DragForceGenerator.cpp" />
     <ClCompile Include="Physics\ForceGenerator.cpp" />
     <ClCompile Include="Physics\ForceRegistry.cpp" />
@@ -176,7 +175,6 @@
     <ClInclude Include="HeaderFiles\Shader.h" />
     <ClInclude Include="HeaderFiles\tiny_obj_loader.h" />
     <ClInclude Include="HeaderFiles\VAO.h" />
-    <ClInclude Include="Physics\ContactResolver.h" />
     <ClInclude Include="Physics\DragForceGenerator.h" />
     <ClInclude Include="Physics\ForceGenerator.h" />
     <ClInclude Include="Physics\ForceRegistry.h" />

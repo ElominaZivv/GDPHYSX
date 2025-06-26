@@ -16,13 +16,9 @@ using namespace std;
 #include "ForceRegistry.h"
 #include "GravityForceGenerator.h"
 #include "ParticleContact.h"
-#include "ContactResolver.h"
 
 class ObjectWorld
 {
-protected:
-	physics::ContactResolver contactResolver = physics::ContactResolver(20);
-
 public:
 	physics::ForceRegistry registry;
 

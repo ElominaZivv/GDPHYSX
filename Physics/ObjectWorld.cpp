@@ -3,25 +3,29 @@
 void ObjectWorld::AddObject(Object* toAdd)
 {
 	physics::P6Particle* p = toAdd->getParticleAddress();
+
+	random_device random;
+	uniform_real_distribution<float> force(-10000.f, 10000.f);
+	float minimumAmplitude = 5000.f;
+	physics::Vector forceVector = physics::Vector(force(random), std::abs(force(random)) + minimumAmplitude, force(random));
+	forceVector.normalize();
+	(p)->addForce(forceVector * std::abs(force(random)));
+
 	Objects.push_back(toAdd);
 	registry.add(p, &gravity);
 }
 
 void ObjectWorld::Render(Shader shader, Camera camera)
 {
-	random_device random;
-	uniform_real_distribution<float> force(-10000.f, 10000.f);
-	float minimumAmplitude = 5000.f;
 	//Render all Objects Sequentially
+
 	int rendered = 0;
+	renderedObject = Objects.size();
 	for (std::list<Object*>::iterator obj = Objects.begin();
 		obj != Objects.end() && rendered < renderedObject;
 		++obj, ++rendered)
 	{
 		(*obj)->render(shader, camera);
-		physics::Vector forceVector = physics::Vector(force(random), std::abs(force(random)) + minimumAmplitude, force(random));
-		forceVector.normalize();
-		(*obj)->addForce(forceVector * std::abs(force(random)));
 	}
 }
 
@@ -40,14 +44,6 @@ void ObjectWorld::AddContact(physics::P6Particle* p1, physics::P6Particle* p2, f
 
 void ObjectWorld::Update(float dTime)
 {
-	renderTimer += dTime;
-
-	if (renderTimer >= 0.2f)
-	{
-		renderedObject++;
-		renderTimer = 0.0f;
-	}
-
 	UpdateObjectList();
 
 	registry.updateForces(dTime);
@@ -60,19 +56,16 @@ void ObjectWorld::Update(float dTime)
 	{
 		(*obj)->update(dTime);
 	}
-
-	if (Contacts.size() > 0)
-	{
-		contactResolver.ResolveContacts(Contacts, dTime);
-	}
 }
 
 void ObjectWorld::UpdateObjectList()
 {
+	//remove obj from the registry
+	for (Object* obj : Objects) if (obj->isDestroyed()) registry.remove(obj->getParticleAddress(), &gravity);
+
 	Objects.remove_if(
 		[](Object* obj) {
 			return obj->isDestroyed();
 		}
 	);
-
 }
