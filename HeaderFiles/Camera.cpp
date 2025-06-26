@@ -102,7 +102,7 @@ void Camera::getUserInput(GLFWwindow* window) {
 		distance -= 1.f;
 	}
 
-
+	// 3rd person camera movement (Thin Matrix, 2024)
 	float groundDist = distance * cos(radians(thetaY));
 	position = vec3(
 		cameraGaze.x + (groundDist * sin(radians(thetaX))),
