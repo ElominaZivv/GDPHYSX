@@ -16,16 +16,19 @@ using namespace std;
 #include "GravityForceGenerator.h"
 #include "ParticleContact.h"
 #include "ContactResolver.h"
+#include "ParticleLink/Rod.h"
 
 class ObjectWorld
 {
 protected:
+	void GenerateContacts();
 	physics::ContactResolver contactResolver = physics::ContactResolver(20);
 
 public:
 	physics::ForceRegistry registry;
-
+		
 	std::list<Object*> Objects;
+	std::list<ParticleLink*>Links;
 	void AddObject(Object* toAdd);
 
 	std::vector<physics::ParticleContact*> Contacts;

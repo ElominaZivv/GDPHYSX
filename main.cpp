@@ -24,6 +24,10 @@
 #include "Physics/ParticleContact.h"
 #include "Physics/ContactResolver.h"
 
+//Springs
+#include "Physics/Spring/AnchoredSpring.h"
+#include "Physics/Spring/ParticleSpring.h"
+
 using namespace std;
 using namespace glm;
 
@@ -80,74 +84,37 @@ int main(void)
     // +------------------------ DECLARE CAMERA ------------------------+
     float windowWidth = 700.0f;
     float windowHeight = 700.0f;
-    float fov = 500.f;
+    float fov = 150.f;
     Camera orthoCam(windowWidth, windowHeight, fov);
 
     // +------------------------ DECLARE OBJECTS ------------------------+
     Object sphere1(sphereVAO);
     Object sphere2(sphereVAO);
-    Object sphere3(sphereVAO);
-    Object sphere4(sphereVAO);
 
     // +------------------------ DECLARE OBJECT WORLD ------------------------+
     ObjectWorld terra;
 
     // +------------------------ OBJECT INITIALIZATIONS ------------------------+
-    sphere1.setObjPos(-75.0, 0.0, 0.0);
+    sphere1.setObjPos(-5.0, 5.0, 0.0);
     sphere1.setMass(5.f);
-    sphere1.setObjVel(10, 0, 0);
-    sphere1.setSize(50.0f);
+    sphere1.setObjVel(-5, 0, 0);
+    sphere1.setSize(2.f);
 
-    sphere2.setObjPos(75.0, 0.0, 0.0);
+    sphere2.setObjPos(5.0, 5.0, 0.0);
     sphere2.setMass(5.f);
-    sphere2.setObjVel(-10,0, 0);
-    sphere2.setSize(50.0f);
-
-    sphere3.setObjPos(0.0, 75.0, 0.0);
-    sphere3.setMass(5.f);
-    sphere3.setObjVel(0,-10, 0);
-    sphere3.setSize(50.0f);
-
-    sphere4.setObjPos(0.0, -75.0, 0.0);
-    sphere4.setMass(5.f);
-    sphere4.setObjVel(0,10, 0);
-    sphere4.setSize(50.0f);
+    sphere2.setObjVel(5, 0, 0);
+    sphere2.setSize(2.f);
 
 
     // +------------------------ FORCE GENERATORS ------------------------+
-        
-    //Ice
-    //physics::DragForceGenerator IceDrag = physics::DragForceGenerator(0.14f, 0.1f);
-
-    // Rubber On Concrete (race car wheels on race track)                           1.0f    0.8f
-    // physics::DragForceGenerator rubberOnConcrete = physics::DragForceGenerator(  1.0f,   0.8f);
-        
+    physics::ParticleSpring pS1 = physics::ParticleSpring(sphere1.getParticleAddress(), 5, 1);
+    physics::ParticleSpring pS2 = physics::ParticleSpring(sphere2.getParticleAddress(), 5, 1);
+    
     // +------------------------ PUSH OBJECTS INTO OBJECT WORLD ------------------------+
     terra.AddObject(&sphere1);
     terra.AddObject(&sphere2);
-    terra.AddObject(&sphere3);
-    terra.AddObject(&sphere4);
-
-    // +------------------------ PARTICLE CONTACT ------------------------+
-    physics::Vector dir1 = sphere1.getObjPos() - sphere2.getObjPos();
-    physics::Vector dir2 = sphere1.getObjPos() - sphere3.getObjPos();
-    physics::Vector dir3 = sphere1.getObjPos() - sphere4.getObjPos();
-    physics::Vector dir4 = sphere2.getObjPos() - sphere3.getObjPos();
-    physics::Vector dir5 = sphere2.getObjPos() - sphere4.getObjPos();
-    physics::Vector dir6 = sphere3.getObjPos() - sphere4.getObjPos();
-
-    dir1.normalize();
-    dir2.normalize();
-    dir3.normalize();
-    dir4.normalize();
-    dir5.normalize();
-    dir6.normalize();
-    terra.AddContact(sphere1.getParticleAddress(), sphere2.getParticleAddress(), 1, dir1);
-    terra.AddContact(sphere1.getParticleAddress(), sphere3.getParticleAddress(), 1, dir2);
-    terra.AddContact(sphere1.getParticleAddress(), sphere4.getParticleAddress(), 1, dir3);
-    terra.AddContact(sphere2.getParticleAddress(), sphere3.getParticleAddress(), 1, dir4);
-    terra.AddContact(sphere2.getParticleAddress(), sphere4.getParticleAddress(), 1, dir5);
-    terra.AddContact(sphere3.getParticleAddress(), sphere4.getParticleAddress(), 1, dir6);
+    terra.registry.add(sphere2.getParticleAddress(), &pS1);
+    terra.registry.add(sphere2.getParticleAddress(), &pS2);
 
     // +------------------------ TIME ------------------------+
     //Initialize the clock and variables

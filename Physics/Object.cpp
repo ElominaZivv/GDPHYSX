@@ -24,8 +24,8 @@ void Object::update(float dTime)
 	//	k = some constant > 0 ; steepness of slope
 	//	B = distance of slope from y-axis
 	float a = 1.0f;
-	float k = 0.9f;
-	float b = 2.f;
+	float k = 0.05f;
+	float b = 0.5f;
 
 	float x = k * particle.vel.mag(); 
 	float be = b * powf(2.718, -x);

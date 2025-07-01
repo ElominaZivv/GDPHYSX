@@ -1,10 +1,27 @@
 #include "ObjectWorld.h"
 
+void ObjectWorld::GenerateContacts()
+{
+	//Erase all contacts
+	Contacts.clear();
+
+	for (std::list<ParticleLink*>::iterator i = Links.begin();
+		i != Links.end();
+		i++)
+	{
+		ParticleContact* contact = (*i)->GetContact();
+		if (contact != nullptr)
+		{
+			Contacts.push_back(contact);
+		}
+	}
+}
+
 void ObjectWorld::AddObject(Object* toAdd)
 {
 	physics::P6Particle* p = toAdd->getParticleAddress();
 	Objects.push_back(toAdd);
-	//registry.add(p, &gravity); // Remove Gravity for now
+	registry.add(p, &gravity); // Remove Gravity for now
 }
 
 void ObjectWorld::Render(Shader shader, Camera camera)

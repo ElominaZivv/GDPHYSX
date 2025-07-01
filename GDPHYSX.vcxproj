@@ -167,6 +167,10 @@
     <ClCompile Include="Physics\ObjectWorld.cpp" />
     <ClCompile Include="Physics\Particle.cpp" />
     <ClCompile Include="Physics\ParticleContact.cpp" />
+    <ClCompile Include="Physics\ParticleLink\ParticleLink.cpp" />
+    <ClCompile Include="Physics\ParticleLink\Rod.cpp" />
+    <ClCompile Include="Physics\Spring\AnchoredSpring.cpp" />
+    <ClCompile Include="Physics\Spring\ParticleSpring.cpp" />
     <ClCompile Include="Physics\Vector.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -184,6 +188,10 @@
     <ClInclude Include="Physics\ObjectWorld.h" />
     <ClInclude Include="Physics\Particle.h" />
     <ClInclude Include="Physics\ParticleContact.h" />
+    <ClInclude Include="Physics\ParticleLink\ParticleLink.h" />
+    <ClInclude Include="Physics\ParticleLink\Rod.h" />
+    <ClInclude Include="Physics\Spring\AnchoredSpring.h" />
+    <ClInclude Include="Physics\Spring\ParticleSpring.h" />
     <ClInclude Include="Physics\Vector.h" />
   </ItemGroup>
   <ItemGroup>
