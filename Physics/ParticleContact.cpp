@@ -3,9 +3,8 @@
 void physics::ParticleContact::Update()
 {
 	// Compute and Update the values of separating speed and depth
-	std::cout << GetSeparatingSpeed() << " : " << GetDepth() << std::endl;
 	GetSeparatingSpeed();
-	GetDepth();
+	//GetDepth();
 }
 
 void physics::ParticleContact::Resolve(float time)
@@ -38,7 +37,7 @@ float physics::ParticleContact::GetDepth()
 	//Update depth
 	// Depth is the magnitude of the distance between centers minus the radii of the 2 particles.
 	//60.0f is hardcoded since the model size is set to 30 and 30
-	depth = 59.0f - particlePosDifference.mag();
+	depth =  60 - particlePosDifference.mag();
 	
 	return depth;
 }
@@ -87,7 +86,7 @@ void physics::ParticleContact::ResolveVelocity(float time)
 void physics::ParticleContact::ResolveInterpenetration(float time)
 {
 	//Compute Depth
-	GetDepth();
+	//GetDepth();
 
 	// If they are not overlapping, skip
 	if (depth <= 0) return;

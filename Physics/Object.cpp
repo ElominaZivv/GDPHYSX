@@ -39,7 +39,7 @@ void Object::MySillyFunctionThatChangesTheColorOfTheParticleBasedOnItsSpeed()
 	//	k = some constant > 0 ; steepness of slope
 	//	B = distance of slope from y-axis
 	float a = 1.0f;
-	float k = 0.0015f;
+	float k = 0.015f;
 	float b = 1.0f;
 
 	float x = k * particle.vel.mag();

@@ -12,6 +12,7 @@ namespace physics
 			for (unsigned i = 0; i < contactSize; i++) contacts[i]->Update();
 
 			// [[1]] Get contact with the least separatingSpeed or a contact with depth 0
+			/*
 			unsigned index = 0;
 			float depth = 0.0f;
 			float lowestSpeed = 0.0f;
@@ -31,8 +32,8 @@ namespace physics
 					i = contactSize; // Break for loop
 				}
 			}
+			*/
 
-			/* SCRAPPED
 			std::sort(contacts.begin(),	// Beginning of vector
 				contacts.end(),		// End of vector
 				[]					// [] lambda function is an anonymous function called in-line
@@ -40,10 +41,12 @@ namespace physics
 				{
 					return a->fSeparatingSpeed < b->fSeparatingSpeed || a->depth < 0.0f;			// Lambda function definition
 				});
-			SCRAPPED	*/
 
 			// [[2]] Resolve the contact
+			/*
 			contacts[index]->Resolve(time);
+			*/
+			for (unsigned i = 0; i < contactSize; i++) contacts[i]->Resolve(time);
 
 			// [[3]] Increment resolve count
 			current_iterations++;

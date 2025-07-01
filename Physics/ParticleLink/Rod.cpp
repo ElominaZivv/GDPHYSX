@@ -25,12 +25,12 @@ namespace physics
 		if (currLen > length)
 		{
 			ret->contactNormal = dir;
-			//ret->depth = currLen - length; //Implement depth later
+			ret->depth = currLen - length; //Implement depth later
 		}
 		else
 		{
 			ret->contactNormal = dir;
-			//ret->depth = length - currLen; //Implement depth later
+			ret->depth = length - currLen; //Implement depth later
 		}
 
 		ret->restitution = restitution;

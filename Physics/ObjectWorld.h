@@ -28,7 +28,7 @@ public:
 	physics::ForceRegistry registry;
 		
 	std::list<Object*> Objects;
-	std::list<ParticleLink*>Links;
+	std::list<physics::ParticleLink*>Links;
 	void AddObject(Object* toAdd);
 
 	std::vector<physics::ParticleContact*> Contacts;

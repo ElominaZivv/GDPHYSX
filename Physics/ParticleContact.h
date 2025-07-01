@@ -14,7 +14,7 @@ namespace physics
 		Vector contactNormal;
 		void Update();
 		void Resolve(float time);
-		float depth;
+		float depth=0.0f;
 
 	protected:
 		float GetSeparatingSpeed();

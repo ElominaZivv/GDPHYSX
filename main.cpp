@@ -95,26 +95,28 @@ int main(void)
     ObjectWorld terra;
 
     // +------------------------ OBJECT INITIALIZATIONS ------------------------+
-    sphere1.setObjPos(-5.0, 5.0, 0.0);
+    sphere1.setObjPos(-50.0, 0.0, 0.0);
     sphere1.setMass(5.f);
-    sphere1.setObjVel(-5, 0, 0);
-    sphere1.setSize(2.f);
+    sphere1.setObjVel(0, 150, 0);
+    sphere1.setSize(10.f);
 
-    sphere2.setObjPos(5.0, 5.0, 0.0);
-    sphere2.setMass(5.f);
-    sphere2.setObjVel(5, 0, 0);
-    sphere2.setSize(2.f);
+    sphere2.setObjPos(50.0, 0.0, 0.0);
+    sphere2.setMass(50.f);
+    sphere2.setObjVel(0, 0, 0);
+    sphere2.setSize(10.f);
 
 
-    // +------------------------ FORCE GENERATORS ------------------------+
-    physics::ParticleSpring pS1 = physics::ParticleSpring(sphere1.getParticleAddress(), 5, 1);
-    physics::ParticleSpring pS2 = physics::ParticleSpring(sphere2.getParticleAddress(), 5, 1);
+    // +------------------------ PARTICLE LINKS ------------------------+
+    physics::Rod* r = new physics::Rod();
+    r->particles[0] = sphere1.getParticleAddress();
+    r->particles[1] = sphere2.getParticleAddress();
+    r->length=100.0f;
+
     
     // +------------------------ PUSH OBJECTS INTO OBJECT WORLD ------------------------+
     terra.AddObject(&sphere1);
     terra.AddObject(&sphere2);
-    terra.registry.add(sphere2.getParticleAddress(), &pS1);
-    terra.registry.add(sphere2.getParticleAddress(), &pS2);
+    terra.Links.push_back(r);
 
     // +------------------------ TIME ------------------------+
     //Initialize the clock and variables

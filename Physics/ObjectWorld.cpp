@@ -5,11 +5,11 @@ void ObjectWorld::GenerateContacts()
 	//Erase all contacts
 	Contacts.clear();
 
-	for (std::list<ParticleLink*>::iterator i = Links.begin();
+	for (std::list<physics::ParticleLink*>::iterator i = Links.begin();
 		i != Links.end();
 		i++)
 	{
-		ParticleContact* contact = (*i)->GetContact();
+		physics::ParticleContact* contact = (*i)->GetContact();
 		if (contact != nullptr)
 		{
 			Contacts.push_back(contact);
@@ -66,6 +66,8 @@ void ObjectWorld::Update(float dTime)
 	{
 		(*obj)->update(dTime);
 	}
+
+	GenerateContacts();
 
 	if (Contacts.size() > 0)
 	{
