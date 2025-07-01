@@ -53,6 +53,7 @@ void ObjectWorld::Update(float dTime)
 	if (Contacts.size() > 0)
 	{
 		contactResolver.ResolveContacts(Contacts, dTime);
+		contactResolver.resetCurrentIteration();
 	}
 }
 

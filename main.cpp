@@ -36,13 +36,13 @@ constexpr::std::chrono::nanoseconds timestep(16ms);
 
 
 // +------------------------+ DEVELOPER STUFFS +------------------------+
-bool isPaused = false;
+bool isPaused = true;
 
 
 // +------------------------+ USER INPUTS +------------------------+
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-    if (key == GLFW_KEY_TAB && action == GLFW_PRESS) isPaused = !isPaused;
+    if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) isPaused = !isPaused;
 }
 
 int main(void)
@@ -54,7 +54,7 @@ int main(void)
         return -1;
 
     /* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(700,700, "PC01 - Elomina, Zivv", NULL, NULL);
+    window = glfwCreateWindow(700,700, "Nows your chance to be a [[Big Shot]] ! ! !", NULL, NULL);
     if (!window)
     {
         glfwTerminate();
@@ -80,38 +80,29 @@ int main(void)
     // +------------------------ DECLARE CAMERA ------------------------+
     float windowWidth = 700.0f;
     float windowHeight = 700.0f;
-    float fov = 500.f;
+    float fov = 300.f;
     Camera orthoCam(windowWidth, windowHeight, fov);
 
     // +------------------------ DECLARE OBJECTS ------------------------+
     Object sphere1(sphereVAO);
     Object sphere2(sphereVAO);
-    Object sphere3(sphereVAO);
-    Object sphere4(sphereVAO);
 
     // +------------------------ DECLARE OBJECT WORLD ------------------------+
     ObjectWorld terra;
 
     // +------------------------ OBJECT INITIALIZATIONS ------------------------+
-    sphere1.setObjPos(-75.0, 0.0, 0.0);
+    sphere1.setObjPos(150.0, 0.0, 0.0);
+    sphere1.setColor(0, 255, 0);
     sphere1.setMass(5.f);
-    sphere1.setObjVel(10, 0, 0);
-    sphere1.setSize(50.0f);
+    sphere1.setObjVel(-50, 0, 0);
+    sphere1.setSize(30.0f);
 
-    sphere2.setObjPos(75.0, 0.0, 0.0);
+    sphere2.setObjPos(-150.0, 0.0, 0.0);
+    sphere2.setColor(255, 0, 0);
     sphere2.setMass(5.f);
-    sphere2.setObjVel(-10,0, 0);
-    sphere2.setSize(50.0f);
+    sphere2.setObjVel(50, 0, 0);
+    sphere2.setSize(30.0f);
 
-    sphere3.setObjPos(0.0, 75.0, 0.0);
-    sphere3.setMass(5.f);
-    sphere3.setObjVel(0,-10, 0);
-    sphere3.setSize(50.0f);
-
-    sphere4.setObjPos(0.0, -75.0, 0.0);
-    sphere4.setMass(5.f);
-    sphere4.setObjVel(0,10, 0);
-    sphere4.setSize(50.0f);
 
 
     // +------------------------ FORCE GENERATORS ------------------------+
@@ -125,29 +116,12 @@ int main(void)
     // +------------------------ PUSH OBJECTS INTO OBJECT WORLD ------------------------+
     terra.AddObject(&sphere1);
     terra.AddObject(&sphere2);
-    terra.AddObject(&sphere3);
-    terra.AddObject(&sphere4);
 
     // +------------------------ PARTICLE CONTACT ------------------------+
-    physics::Vector dir1 = sphere1.getObjPos() - sphere2.getObjPos();
-    physics::Vector dir2 = sphere1.getObjPos() - sphere3.getObjPos();
-    physics::Vector dir3 = sphere1.getObjPos() - sphere4.getObjPos();
-    physics::Vector dir4 = sphere2.getObjPos() - sphere3.getObjPos();
-    physics::Vector dir5 = sphere2.getObjPos() - sphere4.getObjPos();
-    physics::Vector dir6 = sphere3.getObjPos() - sphere4.getObjPos();
-
+    physics::Vector dir1 = sphere2.getObjPos() - sphere1.getObjPos();
+    
     dir1.normalize();
-    dir2.normalize();
-    dir3.normalize();
-    dir4.normalize();
-    dir5.normalize();
-    dir6.normalize();
-    terra.AddContact(sphere1.getParticleAddress(), sphere2.getParticleAddress(), 1, dir1);
-    terra.AddContact(sphere1.getParticleAddress(), sphere3.getParticleAddress(), 1, dir2);
-    terra.AddContact(sphere1.getParticleAddress(), sphere4.getParticleAddress(), 1, dir3);
-    terra.AddContact(sphere2.getParticleAddress(), sphere3.getParticleAddress(), 1, dir4);
-    terra.AddContact(sphere2.getParticleAddress(), sphere4.getParticleAddress(), 1, dir5);
-    terra.AddContact(sphere3.getParticleAddress(), sphere4.getParticleAddress(), 1, dir6);
+    terra.AddContact(sphere2.getParticleAddress(), sphere1.getParticleAddress(), 1, dir1);
 
     // +------------------------ TIME ------------------------+
     //Initialize the clock and variables
