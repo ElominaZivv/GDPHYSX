@@ -18,23 +18,7 @@ void Object::update(float dTime)
 	//Set the position of the model to the position of its particle component
 	model3D->modelPos = vec3(particle.pos);
 
-	//	Change color of model based on speed
-	//	Gompertz Growth Equation = a * e^(-Be^(-k(magnitude)))
-	//	a = upper limit
-	//	k = some constant > 0 ; steepness of slope
-	//	B = distance of slope from y-axis
-	float a = 1.0f;
-	float k = 0.05f;
-	float b = 0.5f;
-
-	float x = k * particle.vel.mag(); 
-	float be = b * powf(2.718, -x);
-	float n = a * powf(2.718, -be);
-
-	float erm = 0.5f;
-	float umm = 0.2f;
-
-	model3D->color = glm::normalize(glm::vec3(n, umm+(erm-(n *erm)), 1-n));
+	MySillyFunctionThatChangesTheColorOfTheParticleBasedOnItsSpeed();
 }
 
 void Object::render(Shader shader, Camera camera)
@@ -45,6 +29,27 @@ void Object::render(Shader shader, Camera camera)
 physics::P6Particle* Object::getParticleAddress()
 {
 	return &particle;
+}
+
+void Object::MySillyFunctionThatChangesTheColorOfTheParticleBasedOnItsSpeed()
+{
+	//	Change color of model based on speed
+	//	Gompertz Growth Equation = a * e^(-Be^(-k(magnitude)))
+	//	a = upper limit
+	//	k = some constant > 0 ; steepness of slope
+	//	B = distance of slope from y-axis
+	float a = 1.0f;
+	float k = 0.0015f;
+	float b = 1.0f;
+
+	float x = k * particle.vel.mag();
+	float be = b * powf(2.718, -x);
+	float n = a * powf(2.718, -be);
+
+	float erm = 0.5f;
+	float umm = 0.2f;
+
+	model3D->color = glm::normalize(glm::vec3(n, umm + (erm - (n * erm)), 1 - n));
 }
 
 void Object::setColor(float r, float g, float b)

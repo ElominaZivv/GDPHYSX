@@ -40,13 +40,13 @@ constexpr::std::chrono::nanoseconds timestep(16ms);
 
 
 // +------------------------+ DEVELOPER STUFFS +------------------------+
-bool isPaused = false;
+bool isPaused = true;
 
 
 // +------------------------+ USER INPUTS +------------------------+
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-    if (key == GLFW_KEY_TAB && action == GLFW_PRESS) isPaused = !isPaused;
+    if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) isPaused = !isPaused;
 }
 
 int main(void)
@@ -58,7 +58,7 @@ int main(void)
         return -1;
 
     /* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(700,700, "PC01 - Elomina, Zivv", NULL, NULL);
+    window = glfwCreateWindow(700,700, "Nows your chance to be a [[Big Shot]] ! ! !", NULL, NULL);
     if (!window)
     {
         glfwTerminate();
@@ -84,7 +84,7 @@ int main(void)
     // +------------------------ DECLARE CAMERA ------------------------+
     float windowWidth = 700.0f;
     float windowHeight = 700.0f;
-    float fov = 150.f;
+    float fov = 300.f;
     Camera orthoCam(windowWidth, windowHeight, fov);
 
     // +------------------------ DECLARE OBJECTS ------------------------+

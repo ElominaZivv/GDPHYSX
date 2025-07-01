@@ -31,6 +31,9 @@ public:
 	//Getters
 	physics::P6Particle* getParticleAddress();
 
+	//My Silly Functions
+	void MySillyFunctionThatChangesTheColorOfTheParticleBasedOnItsSpeed();
+
 	//Setters
 	void setColor(float r, float g, float b);
 	void setSize(float _size);

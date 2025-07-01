@@ -9,15 +9,18 @@ namespace physics
 	{
 	public:
 		P6Particle* particles[2];
-		float separatingSpeed=0;
 		float restitution;
+		float fSeparatingSpeed;
 		Vector contactNormal;
+		void Update();
 		void Resolve(float time);
-		float RetrieveSeparatingSpeed();
+		float depth;
 
 	protected:
 		float GetSeparatingSpeed();
+		float GetDepth();
 		void ResolveVelocity(float time);
+		void ResolveInterpenetration(float time);
 	};
 }
 
