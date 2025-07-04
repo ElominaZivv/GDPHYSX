@@ -23,6 +23,8 @@
 #include "Physics/DragForceGenerator.h"
 #include "Physics/ParticleContact.h"
 #include "Physics/ContactResolver.h"
+#include "Physics/Phase2_Cable/Cable.h"
+#include "Physics/Phase2_Cable/CradleParticleContact.h""
 
 //Springs
 #include "Physics/Spring/AnchoredSpring.h"
@@ -40,13 +42,12 @@ constexpr::std::chrono::nanoseconds timestep(16ms);
 
 
 // +------------------------+ DEVELOPER STUFFS +------------------------+
-bool isPaused = true;
-
+bool isPaused = false;
 
 // +------------------------+ USER INPUTS +------------------------+
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-    if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) isPaused = !isPaused;
+    if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) std::cout<<"Start Simulation"<<std::endl;
 }
 
 int main(void)
@@ -58,7 +59,7 @@ int main(void)
         return -1;
 
     /* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(700,700, "Nows your chance to be a [[Big Shot]] ! ! !", NULL, NULL);
+    window = glfwCreateWindow(800,800, "Nows your chance to be a [[Big Shot]] ! ! !", NULL, NULL);
     if (!window)
     {
         glfwTerminate();
@@ -82,41 +83,53 @@ int main(void)
     auto sphereVAO = make_shared<VAO>("3D/sphere.obj");
 
     // +------------------------ DECLARE CAMERA ------------------------+
-    float windowWidth = 700.0f;
-    float windowHeight = 700.0f;
-    float fov = 300.f;
-    Camera orthoCam(windowWidth, windowHeight, fov);
+    float windowWidth = 800.0f;
+    float windowHeight = 800.0f;
+    float fov = 800.f;
+    Camera generalCamera(windowWidth, windowHeight, fov);
 
+    // +------------------------ PHASE 2 ------------------------+
     // +------------------------ DECLARE OBJECTS ------------------------+
-    Object sphere1(sphereVAO);
-    Object sphere2(sphereVAO);
+    // Spheres
+    Object* spheres[5];
+    for (int sphere = 0; sphere < 5; sphere++) spheres[sphere] = new Object(sphereVAO);
+    
+    // Anchor
+    Object* anchors[5];
+    for (int a = 0; a < 5; a++) anchors[a] = new Object(sphereVAO);
+
+    //Cables
+    physics::Cable* cables[5];
+    for (int cable = 0; cable < 5; cable++) cables[cable] = new physics::Cable();
 
     // +------------------------ DECLARE OBJECT WORLD ------------------------+
     ObjectWorld terra;
 
     // +------------------------ OBJECT INITIALIZATIONS ------------------------+
-    sphere1.setObjPos(-50.0, 0.0, 0.0);
-    sphere1.setMass(5.f);
-    sphere1.setObjVel(0, 150, 0);
-    sphere1.setSize(10.f);
+    float initialForce = -90.0f;
+    float particle_radius = 40.0f;
+    float particle_gap = 90.0f;
+    float cableLength = 300.0f;
 
-    sphere2.setObjPos(50.0, 0.0, 0.0);
-    sphere2.setMass(50.f);
-    sphere2.setObjVel(0, 0, 0);
-    sphere2.setSize(10.f);
+    for (int i = 0; i<5; i++)
+    {
+        spheres[i]->setObjPos(particle_gap * (i-2), 0.0f, 0.0f);
+        spheres[i]->setMass(50.0f);
+        spheres[i]->setSize(particle_radius);
 
-
-    // +------------------------ PARTICLE LINKS ------------------------+
-    physics::Rod* r = new physics::Rod();
-    r->particles[0] = sphere1.getParticleAddress();
-    r->particles[1] = sphere2.getParticleAddress();
-    r->length=100.0f;
-
-    
+        anchors[i]->setObjPos(particle_gap * (i - 2), cableLength, 0.0f);
+        anchors[i]->setSize(5.0f);
+        cables[i]->particles[0] = spheres[i]->getParticleAddress();
+        cables[i]->particles[1] = anchors[i]->getParticleAddress();
+        cables[i]->particleRadii[0] = particle_radius;
+        cables[i]->particleRadii[1] = particle_radius;
+        cables[i]->length = cableLength;
+    }
+    spheres[0]->setObjVel(initialForce, 0.0f, 0.0f);
     // +------------------------ PUSH OBJECTS INTO OBJECT WORLD ------------------------+
-    terra.AddObject(&sphere1);
-    terra.AddObject(&sphere2);
-    terra.Links.push_back(r);
+    for (Object* obj : spheres) terra.AddObject(obj, true);
+    for (Object* obj : anchors) terra.AddObject(obj, false);
+    for (int n = 0; n < 5; n++) terra.Links.push_back(cables[n]);
 
     // +------------------------ TIME ------------------------+
     //Initialize the clock and variables
@@ -124,6 +137,9 @@ int main(void)
     auto curr_time = clock::now();
     auto prev_time = curr_time;
     std::chrono::nanoseconds curr_ns(0);
+
+    // Enable Depth
+    glEnable(GL_DEPTH_TEST);
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
@@ -157,14 +173,20 @@ int main(void)
                 terra.Update(deltaTime);
             }
         }
-        
+
+        // +------------------------ GET USER INPUT ------------------------+
+        glfwSetKeyCallback(window, key_callback);   //  Pause
+        generalCamera.getUserInput(window);         //  Camera Controls
+
+        // +------------------------ UPDATES ------------------------+
+        generalCamera.update();
 
         // +------------------------ RENDER ------------------------+
         // Clear Screen
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // Render all objects
-        terra.Render(shader, orthoCam);
+        terra.Render(shader, generalCamera);
 
         // +--------------------------------------------------------------------------------------------------------------------------+
 
@@ -174,26 +196,11 @@ int main(void)
         /* Poll for and process events */
         glfwPollEvents();
     }
+    //Delete Spheres
+    for (Object* obj : spheres) delete obj;
+    for (Object* obj : anchors) delete obj;
+    for (physics::Cable* c : cables) delete c;
 
     glfwTerminate();
     return 0;
 }
-
-/*
-    May 23, 2025
-    Particle / Point Mass
-     - No Radius
-     - No Size
-     - No Rotation
-
-     - Mass
-     - Position
-     - Velocity
-     - Acceleration
-     - Aside from mass- everything is a Vector
-
-     Keep everything in scale
-     length = meters
-     mass = kilogram
-     time = seconds
-*/

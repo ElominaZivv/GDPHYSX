@@ -4,14 +4,13 @@ void physics::ParticleContact::Update()
 {
 	// Compute and Update the values of separating speed and depth
 	GetSeparatingSpeed();
-	//GetDepth();
+	GetDepth();
 }
 
 void physics::ParticleContact::Resolve(float time)
 {
 	//Conditional (Only change velocity if the particles collide
 	if (depth>0.0f) ResolveVelocity(time);
-	//Order does not really matter [[am i being gaslit?]]
 	ResolveInterpenetration(time);
 }
 
@@ -36,8 +35,7 @@ float physics::ParticleContact::GetDepth()
 
 	//Update depth
 	// Depth is the magnitude of the distance between centers minus the radii of the 2 particles.
-	//60.0f is hardcoded since the model size is set to 30 and 30
-	depth =  60 - particlePosDifference.mag();
+	depth =  (particleRadii	[0] + particleRadii[1])-particlePosDifference.mag();
 	
 	return depth;
 }

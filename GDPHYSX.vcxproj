@@ -157,7 +157,7 @@
     <ClCompile Include="HeaderFiles\Shader.cpp" />
     <ClCompile Include="HeaderFiles\tiny_obj_loader.cpp" />
     <ClCompile Include="HeaderFiles\VAO.cpp" />
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Phase2.cpp" />
     <ClCompile Include="Physics\ContactResolver.cpp" />
     <ClCompile Include="Physics\DragForceGenerator.cpp" />
     <ClCompile Include="Physics\ForceGenerator.cpp" />
@@ -169,6 +169,8 @@
     <ClCompile Include="Physics\ParticleContact.cpp" />
     <ClCompile Include="Physics\ParticleLink\ParticleLink.cpp" />
     <ClCompile Include="Physics\ParticleLink\Rod.cpp" />
+    <ClCompile Include="Physics\Phase2_Cable\Cable.cpp" />
+    <ClCompile Include="Physics\Phase2_Cable\CradleParticleContact.cpp" />
     <ClCompile Include="Physics\Spring\AnchoredSpring.cpp" />
     <ClCompile Include="Physics\Spring\ParticleSpring.cpp" />
     <ClCompile Include="Physics\Vector.cpp" />
@@ -190,6 +192,8 @@
     <ClInclude Include="Physics\ParticleContact.h" />
     <ClInclude Include="Physics\ParticleLink\ParticleLink.h" />
     <ClInclude Include="Physics\ParticleLink\Rod.h" />
+    <ClInclude Include="Physics\Phase2_Cable\Cable.h" />
+    <ClInclude Include="Physics\Phase2_Cable\CradleParticleContact.h" />
     <ClInclude Include="Physics\Spring\AnchoredSpring.h" />
     <ClInclude Include="Physics\Spring\ParticleSpring.h" />
     <ClInclude Include="Physics\Vector.h" />

@@ -1,6 +1,8 @@
 #include "Object.h"
 
 //Constructor
+Object::Object()
+{};
 Object::Object(shared_ptr<VAO> modelVAO)
 {
 	model3D = new Model3D(modelVAO);
@@ -59,6 +61,7 @@ void Object::setColor(float r, float g, float b)
 
 void Object::setSize(float _size)
 {
+	radius = _size;
 	model3D->setSize(_size);
 }
 
@@ -101,6 +104,11 @@ void Object::resetForce()
 physics::Vector Object::getObjPos()
 {
 	return particle.pos;
+}
+
+float Object::getSize()
+{
+	return radius;
 }
 
 bool Object::isDestroyed() { return particle.isDestroyed(); }

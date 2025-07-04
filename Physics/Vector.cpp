@@ -28,12 +28,13 @@ namespace physics {
 	// "explicit couldn't be specified for out-of-class member function definition; it should be specified only inside the class definition."
 	Vector::operator glm::vec3() const { return glm::vec3(x, y, z); }
 
-	void Vector::normalize()
+	Vector Vector::normalize()
 	{
 		Vector normalized = this->dir();
 		this->x = normalized.x;
 		this->y = normalized.y;
 		this->z = normalized.z;
+		return normalized;
 	}
 
 	// Computes for the Magnitude
@@ -48,7 +49,7 @@ namespace physics {
 		float magnitude = mag();
 		if (magnitude == 0)
 		{
-			cout << "You cannot divide components of vector by magnitude = 0. Returning physics::Vector(0,0,0)" << endl;
+			//cout << "You cannot divide components of vector by magnitude = 0. Returning physics::Vector(0,0,0)" << endl;
 			return physics::Vector(0, 0, 0);
 		}
 		return physics::Vector(x/magnitude,y/magnitude,z/magnitude);

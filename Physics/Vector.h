@@ -24,7 +24,7 @@ namespace physics {
 		// "explicit couldn't be specified for out-of-class member function definition; it should be specified only inside the class definition."
 		explicit operator glm::vec3() const;
 
-		void normalize();
+		Vector normalize();
 
 		//Magnitude
 		float mag();

@@ -9,18 +9,19 @@ namespace physics
 	{
 	public:
 		P6Particle* particles[2];
+		float particleRadii[2];
 		float restitution;
 		float fSeparatingSpeed;
 		Vector contactNormal;
-		void Update();
+		virtual void Update();
 		void Resolve(float time);
-		float depth=0.0f;
+		float depth = 0.0;
 
 	protected:
 		float GetSeparatingSpeed();
 		float GetDepth();
-		void ResolveVelocity(float time);
-		void ResolveInterpenetration(float time);
+		virtual void ResolveVelocity(float time);
+		virtual void ResolveInterpenetration(float time);
 	};
 }
 

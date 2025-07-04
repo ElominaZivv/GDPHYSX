@@ -19,9 +19,12 @@ class Object
 private:
 	Model3D* model3D;
 	physics::P6Particle particle;
+	//	Phase2
+	float radius;
 
 public:
 	//Constructor
+	Object();
 	Object(shared_ptr<VAO> modelVAO);
 	//Destructor
 	~Object();
@@ -49,6 +52,7 @@ public:
 
 	//Getters
 	physics::Vector getObjPos();
+	float getSize();
 	bool isDestroyed();
 };
 

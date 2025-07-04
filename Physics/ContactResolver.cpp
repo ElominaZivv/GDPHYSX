@@ -12,40 +12,32 @@ namespace physics
 			for (unsigned i = 0; i < contactSize; i++) contacts[i]->Update();
 
 			// [[1]] Get contact with the least separatingSpeed or a contact with depth 0
-			/*
-			unsigned index = 0;
-			float depth = 0.0f;
-			float lowestSpeed = 0.0f;
-			float sS = 0.0f;
-			for (unsigned i = 0; i < contactSize; i++)
-			{
-				sS = contacts[i]->fSeparatingSpeed;
-				if (sS < lowestSpeed)
-				{
-					lowestSpeed = sS;
-					index = i;
-				}
-
-				if (contacts[i]->depth < 0)
-				{
-					index = i;
-					i = contactSize; // Break for loop
-				}
-			}
-			*/
-
-			std::sort(contacts.begin(),	// Beginning of vector
+			//Sort by separating speed
+			std::sort
+			(
+				contacts.begin(),	// Beginning of vector
 				contacts.end(),		// End of vector
 				[]					// [] lambda function is an anonymous function called in-line
-			(const ParticleContact* a, const ParticleContact* b)	//  Parameters of Lambda function
+				(const ParticleContact* a, const ParticleContact* b)	//  Parameters of Lambda function
+				{	
+					return a->fSeparatingSpeed < b->fSeparatingSpeed;			
+				}
+			);
+
+			// Sort by depth
+			std::sort
+			(
+				contacts.begin(),	// Beginning of vector
+				contacts.end(),		// End of vector
+				[]					// [] lambda function is an anonymous function called in-line
+				(const ParticleContact* a, const ParticleContact* b)	//  Parameters of Lambda function
 				{
-					return a->fSeparatingSpeed < b->fSeparatingSpeed || a->depth < 0.0f;			// Lambda function definition
-				});
+					return a->depth > b->depth;
+				}
+			);
 
 			// [[2]] Resolve the contact
-			/*
-			contacts[index]->Resolve(time);
-			*/
+			//contacts[0]->Resolve(time);
 			for (unsigned i = 0; i < contactSize; i++) contacts[i]->Resolve(time);
 
 			// [[3]] Increment resolve count
