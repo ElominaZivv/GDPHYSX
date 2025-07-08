@@ -14,7 +14,7 @@ namespace physics
 		float fSeparatingSpeed;
 		Vector contactNormal;
 		virtual void Update();
-		void Resolve(float time);
+		virtual void Resolve(float time);
 		float depth = 0.0;
 
 	protected:

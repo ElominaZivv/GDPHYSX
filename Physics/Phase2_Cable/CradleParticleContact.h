@@ -9,6 +9,7 @@ namespace physics
 	{
 	public:
 		void Update() override;
+		void Resolve(float time) override;
 	protected:
 		void ResolveVelocity(float time) override;
 		void ResolveInterpenetration(float time) override;

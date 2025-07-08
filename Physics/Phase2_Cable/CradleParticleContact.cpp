@@ -2,9 +2,12 @@
 
 namespace physics 
 {
-	void CradleParticleContact::Update()
+	void CradleParticleContact::Update(){}
+
+	void CradleParticleContact::Resolve(float time)
 	{
-		GetSeparatingSpeed();
+		ResolveVelocity(time);
+		ResolveInterpenetration(time);
 	}
 
 	void CradleParticleContact::ResolveVelocity(float time)
