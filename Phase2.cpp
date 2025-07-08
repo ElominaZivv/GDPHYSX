@@ -113,7 +113,7 @@ int main(void)
 
     for (int i = 0; i<5; i++)
     {
-        spheres[i]->setObjPos(particle_gap * (i-2), 0.0f, 0.0f);
+        spheres[i]->setObjPos(particle_gap * (i-2), cableLength, 0.0f);
         spheres[i]->setMass(50.0f);
         spheres[i]->setSize(particle_radius);
 
@@ -125,7 +125,9 @@ int main(void)
         cables[i]->particleRadii[1] = particle_radius;
         cables[i]->length = cableLength;
     }
-    spheres[0]->setObjVel(initialForce, 0.0f, 0.0f);
+
+    //Initial force that moves the left most sphere 
+    //spheres[0]->setObjVel(initialForce, 0.0f, 0.0f);
     // +------------------------ PUSH OBJECTS INTO OBJECT WORLD ------------------------+
     for (Object* obj : spheres) terra.AddObject(obj, true);
     for (Object* obj : anchors) terra.AddObject(obj, false);
