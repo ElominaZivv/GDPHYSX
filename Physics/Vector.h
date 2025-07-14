@@ -29,6 +29,9 @@ namespace physics {
 		//Magnitude
 		float mag();
 
+		//Magnitude squared
+		float squareMag();
+
 		//Direction
 		physics::Vector dir();
 

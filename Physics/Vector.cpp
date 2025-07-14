@@ -43,6 +43,12 @@ namespace physics {
 		return sqrt(pow(x,2)+pow(y,2)+pow(z,2));
 	}
 
+	// Computes for the Squared Magnitude
+	float Vector::squareMag()
+	{
+		return (pow(x, 2) + pow(y, 2) + pow(z, 2));
+	}
+
 	//Computes for Direction
 	physics::Vector Vector::dir()
 	{

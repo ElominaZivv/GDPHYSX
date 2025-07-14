@@ -14,22 +14,14 @@ Camera::Camera(float newWindowWidth, float newWindowHeight, float _fov)
 	//Orthographic Camera by default
 	perspectiveCam = false;
 	orthoCam = true;
-
-	//Orthographic by default
+	float z = 99999;
 	projectionMatrix = ortho(
 		-fov,
 		fov,
 		-fov,
 		fov,
-		zNear,
-		zFar
-	);
-
-	projectionMatrix = perspective(
-		radians(fov),				//This is your FOV
-		windowHeight / windowWidth, //Aspect ratio
-		zNear,                      //z-Near, should never be <= 0
-		zFar						//z-Far   
+		-z,
+		z
 	);
 }
 

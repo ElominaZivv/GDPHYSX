@@ -17,7 +17,6 @@ namespace physics
 		ContactResolver(unsigned _maxIterations) : max_iterations(_maxIterations) {};
 		//Resolve all assigned contacts
 		void ResolveContacts(std::vector<ParticleContact*> contacts, float time);
-		void resetCurrentIteration();
 	};
 }
 

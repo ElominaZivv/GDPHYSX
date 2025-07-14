@@ -19,9 +19,8 @@ namespace physics
 
 	protected:
 		float GetSeparatingSpeed();
-		float GetDepth();
-		virtual void ResolveVelocity(float time);
-		virtual void ResolveInterpenetration(float time);
+		void ResolveVelocity(float time);
+		void ResolveInterpenetration(float time);
 	};
 }
 
