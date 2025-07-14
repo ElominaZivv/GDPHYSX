@@ -106,28 +106,27 @@ int main(void)
     ObjectWorld terra;
 
     // +------------------------ OBJECT INITIALIZATIONS ------------------------+
-    float initialForce = -90.0f;
+    float initialForce = -70.0f;
     float particle_radius = 40.0f;
-    float particle_gap = 90.0f;
+    float particle_gap = 85.0f;
     float cableLength = 300.0f;
 
     for (int i = 0; i<5; i++)
     {
         spheres[i]->setObjPos(particle_gap * (i-2), cableLength, 0.0f);
-        spheres[i]->setMass(50.0f);
-        spheres[i]->setSize(particle_radius);
+        spheres[i]->setMass(500.0f);
+        spheres[i]->setRadius(particle_radius);
 
         anchors[i]->setObjPos(particle_gap * (i - 2), cableLength, 0.0f);
-        anchors[i]->setSize(5.0f);
+        anchors[i]->setRadius(5.0f);
         cables[i]->particles[0] = spheres[i]->getParticleAddress();
         cables[i]->particles[1] = anchors[i]->getParticleAddress();
-        cables[i]->particleRadii[0] = particle_radius;
-        cables[i]->particleRadii[1] = particle_radius;
         cables[i]->length = cableLength;
     }
 
     //Initial force that moves the left most sphere 
     //spheres[0]->setObjVel(initialForce, 0.0f, 0.0f);
+    
     // +------------------------ PUSH OBJECTS INTO OBJECT WORLD ------------------------+
     for (Object* obj : spheres) terra.AddObject(obj, true);
     for (Object* obj : anchors) terra.AddObject(obj, false);
@@ -198,9 +197,10 @@ int main(void)
         /* Poll for and process events */
         glfwPollEvents();
     }
-    //Delete Spheres
+    //Delete Spheres, Anchors, and Cables
     for (Object* obj : spheres) delete obj;
     for (Object* obj : anchors) delete obj;
+
     for (physics::Cable* c : cables) delete c;
 
     glfwTerminate();

@@ -75,7 +75,8 @@ namespace physics
 		Vector moveByMass = contactNormal * totalMoveByMass;
 
 		//Get in the change in position of the first particle
-		Vector P_a = moveByMass * ((float)1 / particles[0]->mass);
+		//Vector P_a = moveByMass * ((float)1 / particles[0]->mass);
+		Vector P_a = moveByMass;
 		//Translate a
 		particles[0]->pos += P_a;
 

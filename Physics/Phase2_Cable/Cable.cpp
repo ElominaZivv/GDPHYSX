@@ -17,8 +17,6 @@ namespace physics
 		// Assign the two particles
 		ret->particles[0] = particles[0];
 		ret->particles[1] = particles[1];
-		ret->particleRadii[0] = particleRadii[0];
-		ret->particleRadii[1] = particleRadii[1];
 
 		//Get the direction of collision
 		Vector dir = particles[1]->pos - particles[0]->pos;

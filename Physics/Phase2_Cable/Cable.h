@@ -14,7 +14,6 @@ namespace physics
 
 		//Restitution
 		float restitution = 0.0f;
-		float particleRadii[2];
 
 		CradleParticleContact* GetContact() override;
 

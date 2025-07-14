@@ -18,29 +18,6 @@ void ObjectWorld::GenerateContacts()
 			Contacts.push_back(contact);
 		}
 	}
-
-	// Gods forgive me for what I am about to do
-	// Should add some collision detecttion so this does not get called every update
-	physics::Vector dir;
-	for (std::list<Object*>::iterator obj = Objects.begin(); obj != Objects.end(); obj++)
-	{
-		auto n_obj = obj;
-		if (obj != prev(Objects.end(),1))
-		{
-			advance(n_obj, 1);
-			dir = (*obj)->getObjPos() - (*n_obj)->getObjPos();
-			dir.normalize();
-			AddContact
-			(
-				(*obj)->getParticleAddress(),
-				(*n_obj)->getParticleAddress(),
-				(*obj)->getSize(),
-				(*n_obj)->getSize(),
-				0.9,
-				dir
-			);
-		}
-	}
 }
 
 void ObjectWorld::GetOverlaps()
@@ -120,8 +97,6 @@ void ObjectWorld::AddContact(physics::P6Particle* p1, physics::P6Particle* p2, f
 
 	toAdd->particles[0] = p1;
 	toAdd->particles[1] = p2;
-	toAdd->particleRadii[0] = particleRadius1;
-	toAdd->particleRadii[1] = particleRadius2;
 	toAdd->restitution = restitution;
 	toAdd->contactNormal = contactNormal;
 	toAdd->depth = depth;
