@@ -4,9 +4,9 @@ namespace physics
 {
 	void ContactResolver::ResolveContacts(std::vector<ParticleContact*> contacts, float time)
 	{
+		current_iterations = 0;
 		int contactSize = contacts.size();
-		int check = 0;
-		while (check != contactSize && current_iterations < max_iterations)
+		while (current_iterations < max_iterations)
 		{
 			//Compute the separating speed of the contacts
 			for (unsigned i = 0; i < contactSize; i++) contacts[i]->Update();
@@ -34,25 +34,42 @@ namespace physics
 			}
 			*/
 
-			std::sort(contacts.begin(),	// Beginning of vector
+			// Sort first by separating speed
+			std::sort
+			(
+				contacts.begin(),	// Beginning of vector
 				contacts.end(),		// End of vector
 				[]					// [] lambda function is an anonymous function called in-line
-			(const ParticleContact* a, const ParticleContact* b)	//  Parameters of Lambda function
+				(const ParticleContact* a, const ParticleContact* b)	//  Parameters of Lambda function
 				{
-					return a->fSeparatingSpeed < b->fSeparatingSpeed || a->depth < 0.0f;			// Lambda function definition
-				});
+					//Sort the particle contacts by either the least separating speed
+					return a->fSeparatingSpeed < b->fSeparatingSpeed;	// Lambda function definition
+				}
+			);
+
+			// Sort second by depth
+			std::sort
+			(
+				contacts.begin(),	// Beginning of vector
+				contacts.end(),		// End of vector
+				[]					// [] lambda function is an anonymous function called in-line
+				(const ParticleContact* a, const ParticleContact* b)	//  Parameters of Lambda function
+				{
+					//Sort the particle contacts by either the least separating speed OR the greatest depth
+					return a->depth > b->depth;			// Lambda function definition
+				}
+			);
 
 			// [[2]] Resolve the contact
-			/*
-			contacts[index]->Resolve(time);
-			*/
-			for (unsigned i = 0; i < contactSize; i++) contacts[i]->Resolve(time);
+			//std::cout << contacts[0]->fSeparatingSpeed << " : " << contacts[0]->depth << std::endl;
+			contacts[0]->Resolve(time);
+			//for (unsigned i = 0; i < contactSize; i++) contacts[i]->Resolve(time);
 
 			// [[3]] Increment resolve count
 			current_iterations++;
 
 			// [[4]] if sS of all contacts are >= 0 AND Depth <=0, end
-			check = 0;
+			int check = 0;
 			for (unsigned i = 0; i < contactSize; i++)
 			{
 				if (contacts[i]->fSeparatingSpeed >= 0 && contacts[i]->depth <= 0)
@@ -60,10 +77,7 @@ namespace physics
 					check++;
 				}
 			}
+			if (check == contactSize) return;
 		}
-	}
-	void ContactResolver::resetCurrentIteration()
-	{
-		current_iterations = 0;
 	}
 }	

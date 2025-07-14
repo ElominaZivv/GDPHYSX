@@ -21,7 +21,9 @@ namespace physics {
 
 	public:
 		//Mass of the particle
-		float mass = 1;
+		float mass = 1.0f;
+		float radius = 1.0f;
+		float restitution = 1.0f;
 
 		physics::Vector pos; //Position
 		physics::Vector vel; //Velocity

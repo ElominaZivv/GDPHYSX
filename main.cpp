@@ -40,7 +40,7 @@ constexpr::std::chrono::nanoseconds timestep(16ms);
 
 
 // +------------------------+ DEVELOPER STUFFS +------------------------+
-bool isPaused = true;
+bool isPaused = false;
 
 
 // +------------------------+ USER INPUTS +------------------------+
@@ -95,21 +95,21 @@ int main(void)
     ObjectWorld terra;
 
     // +------------------------ OBJECT INITIALIZATIONS ------------------------+
-    sphere1.setObjPos(-50.0, 0.0, 0.0);
+    sphere1.setObjPos(-50.0, -150.0, 0.0);
     sphere1.setMass(5.f);
-    sphere1.setObjVel(0, 150, 0);
-    sphere1.setSize(10.f);
+    sphere1.setObjVel(0, -1000, 0);
+    sphere1.setRadius(10.f);
 
-    sphere2.setObjPos(50.0, 0.0, 0.0);
-    sphere2.setMass(50.f);
+    sphere2.setObjPos(50.0, -150.0, 0.0);
+    sphere2.setMass(100.f);
     sphere2.setObjVel(0, 0, 0);
-    sphere2.setSize(10.f);
+    sphere2.setRadius(15.f);
 
-
+    
     // +------------------------ PARTICLE LINKS ------------------------+
     physics::Rod* r = new physics::Rod();
-    r->particles[0] = sphere1.getParticleAddress();
-    r->particles[1] = sphere2.getParticleAddress();
+    r->particles[1] = sphere1.getParticleAddress();
+    r->particles[0] = sphere2.getParticleAddress();
     r->length=100.0f;
 
     
@@ -174,6 +174,7 @@ int main(void)
         /* Poll for and process events */
         glfwPollEvents();
     }
+    delete r;
 
     glfwTerminate();
     return 0;

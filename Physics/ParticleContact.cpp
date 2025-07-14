@@ -2,15 +2,13 @@
 
 void physics::ParticleContact::Update()
 {
-	// Compute and Update the values of separating speed and depth
+	// Compute and Update the values of separating speed
 	GetSeparatingSpeed();
-	//GetDepth();
 }
 
 void physics::ParticleContact::Resolve(float time)
 {
-	//Conditional (Only change velocity if the particles collide
-	if (depth>0.0f) ResolveVelocity(time);
+	ResolveVelocity(time);
 	//Order does not really matter [[am i being gaslit?]]
 	ResolveInterpenetration(time);
 }
@@ -27,19 +25,6 @@ float physics::ParticleContact::GetSeparatingSpeed()
 	fSeparatingSpeed = velocity.dot(contactNormal);
 
 	return fSeparatingSpeed;
-}
-
-float physics::ParticleContact::GetDepth()
-{
-	Vector particlePosDifference = particles[0]->pos;
-	if (particles[1]) particlePosDifference -= particles[1]->pos;
-
-	//Update depth
-	// Depth is the magnitude of the distance between centers minus the radii of the 2 particles.
-	//60.0f is hardcoded since the model size is set to 30 and 30
-	depth =  60 - particlePosDifference.mag();
-	
-	return depth;
 }
 
 void physics::ParticleContact::ResolveVelocity(float time)
@@ -100,12 +85,13 @@ void physics::ParticleContact::ResolveInterpenetration(float time)
 
 	//How many units to move per total mass
 	float totalMoveByMass = depth / totalMass;
-	 
+
 	//Get the vector of the total movement involved
 	Vector moveByMass = contactNormal * totalMoveByMass;
 
 	//Get in the change in position of the first particle
 	Vector P_a = moveByMass * ((float)1 / particles[0]->mass);
+
 	//Translate a
 	particles[0]->pos += P_a;
 

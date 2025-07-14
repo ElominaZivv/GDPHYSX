@@ -36,7 +36,7 @@ public:
 
 	//Setters
 	void setColor(float r, float g, float b);
-	void setSize(float _size);
+	void setRadius(float _radius);
 	void setMass(float _mass);
 	void setObjPos(float x, float y, float z);
 	void setObjVel(float x, float y, float z);
@@ -49,6 +49,8 @@ public:
 
 	//Getters
 	physics::Vector getObjPos();
+	float GetRadius();
+	float GetRestitution();
 	bool isDestroyed();
 };
 

@@ -57,9 +57,10 @@ void Object::setColor(float r, float g, float b)
 	model3D->color = vec3(r, g, b);
 }
 
-void Object::setSize(float _size)
+void Object::setRadius(float _radius)
 {
-	model3D->setSize(_size);
+	particle.radius = _radius;
+	model3D->setSize(particle.radius);
 }
 
 void Object::setMass(float _mass)
@@ -101,6 +102,16 @@ void Object::resetForce()
 physics::Vector Object::getObjPos()
 {
 	return particle.pos;
+}
+
+float Object::GetRadius()
+{
+	return particle.radius;
+}
+
+float Object::GetRestitution()
+{
+	return particle.restitution;
 }
 
 bool Object::isDestroyed() { return particle.isDestroyed(); }

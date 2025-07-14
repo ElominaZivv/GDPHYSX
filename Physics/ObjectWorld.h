@@ -23,6 +23,7 @@ class ObjectWorld
 protected:
 	void GenerateContacts();
 	physics::ContactResolver contactResolver = physics::ContactResolver(20);
+	void GetOverlaps();
 
 public:
 	physics::ForceRegistry registry;
@@ -32,7 +33,7 @@ public:
 	void AddObject(Object* toAdd);
 
 	std::vector<physics::ParticleContact*> Contacts;
-	void AddContact(physics::P6Particle* p1, physics::P6Particle* p2, float restitution, physics::Vector contactNormal);
+	void AddContact(physics::P6Particle* p1, physics::P6Particle* p2, float restitution, physics::Vector contactNormal, float depth);
 
 	void Update(float dTime);
 	void Render(Shader shader, Camera camera);

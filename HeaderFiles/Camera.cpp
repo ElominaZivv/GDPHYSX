@@ -12,13 +12,14 @@ Camera::Camera(float newWindowWidth, float newWindowHeight, float fov)
 	//Orthographic Camera by default
 	perspectiveCam = false;
 	orthoCam = true;
+	float z = 99999;
 	projectionMatrix = ortho(
 		-fov,
 		fov,
 		-fov,
 		fov,
-		-fov,
-		fov
+		-z,
+		z
 	);
 }
 
