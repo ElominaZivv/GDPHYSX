@@ -113,7 +113,7 @@ int main(void)
 
     for (int i = 0; i<5; i++)
     {
-        spheres[i]->setObjPos(particle_gap * (i-2), cableLength, 0.0f);
+        spheres[i]->setObjPos(particle_gap * (i-2), 0, 0.0f);
         spheres[i]->setMass(500.0f);
         spheres[i]->setRadius(particle_radius);
 
