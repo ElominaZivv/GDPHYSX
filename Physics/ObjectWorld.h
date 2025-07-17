@@ -42,9 +42,12 @@ public:
 
 	//Silly Functions
 	void atCenter();
+	
+	// Put it here for now to modify it
+	physics::GravityForceGenerator gravity = physics::GravityForceGenerator(physics::Vector(0, -9.8f, 0));
 
 private:
-	physics::GravityForceGenerator gravity = physics::GravityForceGenerator(physics::Vector(0, -9.8f, 0));
+	// physics::GravityForceGenerator gravity = physics::GravityForceGenerator(physics::Vector(0, -9.8f, 0));
 	void UpdateObjectList();
 };
 

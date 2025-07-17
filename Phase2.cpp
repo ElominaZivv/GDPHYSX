@@ -24,7 +24,7 @@
 #include "Physics/ParticleContact.h"
 #include "Physics/ContactResolver.h"
 #include "Physics/Phase2_Cable/Cable.h"
-#include "Physics/Phase2_Cable/CradleParticleContact.h""
+#include "Physics/Phase2_Cable/CradleParticleContact.h"
 
 //Springs
 #include "Physics/Spring/AnchoredSpring.h"
@@ -50,6 +50,7 @@ float initialForce = -70.0f;
 float particle_radius = 40.0f;
 float particle_gap = 85.0f;
 float cableLength = 300.0f;
+float gravity = -9.8f;
 
 //printf("Initial Force : ");
 //scanf("%f",  &initialForce);
@@ -92,6 +93,8 @@ int main(void)
     cin >> particle_gap;
     printf("Cable Length : ");
     cin >> cableLength;
+    printf("Gravity : ");
+    cin >> gravity;
 
     // +------------------------ DECLARE SHADERS ------------------------+
     Shader shader("Shaders/solidColorShader.vert", "Shaders/solidColorShader.frag");
@@ -123,6 +126,7 @@ int main(void)
 
     // +------------------------ DECLARE OBJECT WORLD ------------------------+
     ObjectWorld terra;
+    terra.gravity = physics::Vector(0, gravity, 0);
 
     // +------------------------ OBJECT INITIALIZATIONS ------------------------+
     /*float initialForce = -70.0f;
