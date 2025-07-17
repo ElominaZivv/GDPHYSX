@@ -13,7 +13,7 @@ namespace physics
 		float length = 1;
 
 		//Restitution
-		float restitution = 0.0f;
+		float restitution = 0.9f;
 
 		CradleParticleContact* GetContact() override;
 

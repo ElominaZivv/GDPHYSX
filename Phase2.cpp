@@ -45,9 +45,18 @@ constexpr::std::chrono::nanoseconds timestep(16ms);
 bool isPaused = false;
 
 // +------------------------+ USER INPUTS +------------------------+
+Object* spheres[5];
+float initialForce = -70.0f;
+float particle_radius = 40.0f;
+float particle_gap = 85.0f;
+float cableLength = 300.0f;
+
+//printf("Initial Force : ");
+//scanf("%f",  &initialForce);
+
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-    if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) std::cout<<"Start Simulation"<<std::endl;
+    if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) spheres[0]->setObjVel(initialForce, 0.0f, 0.0f);
 }
 
 int main(void)
@@ -74,6 +83,16 @@ int main(void)
     // +------------------------ GET USER INPUT ------------------------+
     glfwSetKeyCallback(window, key_callback);
 
+    // skibidii toillet
+    printf("Initial Force : ");
+    cin >> initialForce;
+    printf("Particle Radius : ");
+    cin >> particle_radius;
+    printf("Particle Gap : ");
+    cin >> particle_gap;
+    printf("Cable Length : ");
+    cin >> cableLength;
+
     // +------------------------ DECLARE SHADERS ------------------------+
     Shader shader("Shaders/solidColorShader.vert", "Shaders/solidColorShader.frag");
 
@@ -91,7 +110,7 @@ int main(void)
     // +------------------------ PHASE 2 ------------------------+
     // +------------------------ DECLARE OBJECTS ------------------------+
     // Spheres
-    Object* spheres[5];
+    /*Object* spheres[5];*/
     for (int sphere = 0; sphere < 5; sphere++) spheres[sphere] = new Object(sphereVAO);
     
     // Anchor
@@ -106,10 +125,10 @@ int main(void)
     ObjectWorld terra;
 
     // +------------------------ OBJECT INITIALIZATIONS ------------------------+
-    float initialForce = -70.0f;
+    /*float initialForce = -70.0f;
     float particle_radius = 40.0f;
     float particle_gap = 85.0f;
-    float cableLength = 300.0f;
+    float cableLength = 300.0f;*/
 
     for (int i = 0; i<5; i++)
     {
@@ -125,7 +144,7 @@ int main(void)
     }
 
     //Initial force that moves the left most sphere 
-    //spheres[0]->setObjVel(initialForce, 0.0f, 0.0f);
+    /*spheres[0]->setObjVel(initialForce, 0.0f, 0.0f);*/
     
     // +------------------------ PUSH OBJECTS INTO OBJECT WORLD ------------------------+
     for (Object* obj : spheres) terra.AddObject(obj, true);
