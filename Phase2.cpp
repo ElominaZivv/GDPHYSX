@@ -127,10 +127,6 @@ int main(void)
 
     //Lines
     vector<Line*> lines;
-    for (int i = 0; i < 5; i++) {
-        Line* line = new Line(anchors[i], spheres[i]->getParticleAddress());
-        lines.push_back(line);
-    }
 
     // +------------------------ DECLARE OBJECT WORLD ------------------------+
     ObjectWorld terra;
@@ -154,6 +150,17 @@ int main(void)
         cables[i]->particles[0] = spheres[i]->getParticleAddress();
         cables[i]->particles[1] = anchors[i]->getParticleAddress();
         cables[i]->length = cableLength;
+
+
+        
+    }
+
+    for (int i = 0; i < 5; i++) {
+
+        cout << "anchor: " << spheres[1]->getObjPos().x << endl;
+        Line* line = new Line(anchors[i], spheres[i]->getParticleAddress());
+        lines.push_back(line);
+        cout << "line: " << lines[i]->start.x <<endl;
     }
 
     //Initial force that moves the left most sphere 
@@ -223,9 +230,9 @@ int main(void)
 
         // Render all objects
         terra.Render(shader, generalCamera);
-        for (auto& line : lines) {
+        /*for (auto& line : lines) {
             line->draw();
-        }
+        }*/
 
         // +--------------------------------------------------------------------------------------------------------------------------+
 

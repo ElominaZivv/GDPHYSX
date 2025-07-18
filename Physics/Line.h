@@ -17,6 +17,8 @@ class Line {
 		GLuint VAO, VBO;
 
 		Line(Object* anchor, physics::P6Particle* p);
+		~Line();
+
 		void update();
 		void draw();
 	private:

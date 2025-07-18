@@ -1,8 +1,9 @@
 #include "Line.h"
 
 Line::Line(Object* anchor, physics::P6Particle* p) {
-    physics::Vector anchorPos = anchor->getObjPos();
+    cout << "anchor passed: " << anchor->getObjPos().x <<endl;
     start = anchor->getObjPos();
+    start.x = -85;
     sphere = p;
     end = sphere->pos;
 
@@ -57,4 +58,9 @@ void Line::updateVertexData() {
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
+Line::~Line() {
+    glDeleteBuffers(1, &VBO);
+    glDeleteVertexArrays(1, &VAO);
 }
