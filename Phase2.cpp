@@ -70,7 +70,7 @@ int main(void)
         return -1;
 
     /* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(800,800, "Nows your chance to be a [[Big Shot]] ! ! !", NULL, NULL);
+    window = glfwCreateWindow(800,800, "Phase2_Grouping2_Chen-Elomina-Naranjo", NULL, NULL);
     if (!window)
     {
         glfwTerminate();
