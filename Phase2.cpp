@@ -139,6 +139,7 @@ int main(void)
         spheres[i]->setObjPos(particle_gap * (i-2), 0, 0.0f);
         spheres[i]->setMass(500.0f);
         spheres[i]->setRadius(particle_radius);
+        spheres[i]->setRestitution(0.9);
 
         anchors[i]->setObjPos(particle_gap * (i - 2), cableLength, 0.0f);
         anchors[i]->setRadius(5.0f);
@@ -161,7 +162,7 @@ int main(void)
     auto curr_time = clock::now();
     auto prev_time = curr_time;
     std::chrono::nanoseconds curr_ns(0);
-
+    
     // Enable Depth
     glEnable(GL_DEPTH_TEST);
 

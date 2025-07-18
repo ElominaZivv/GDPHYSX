@@ -86,6 +86,11 @@ void Object::setObjAcc(float x, float y, float z)
 	particle.acc = physics::Vector(x, y, z);
 }
 
+void Object::setRestitution(float _restitution)
+{
+	particle.restitution = _restitution;
+}
+
 void Object::destroy()
 {
 	particle.destroy();
