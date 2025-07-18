@@ -6,10 +6,12 @@
 #include "Vector.h"
 #include "Object.h"
 #include "Particle.h"
+#include "../HeaderFiles/Camera.h"
+#include "../HeaderFiles/Shader.h"
 
 class Line {
 	public:
-		float x1, y1, x2, y2; //anchor and ball pos
+		physics::Vector start, end; //anchor and ball pos
 		float lineX1, lineX2, lineY1, lineY2;
 		GLuint VAO, VBO;
 

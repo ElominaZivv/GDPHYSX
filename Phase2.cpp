@@ -25,6 +25,7 @@
 #include "Physics/ContactResolver.h"
 #include "Physics/Phase2_Cable/Cable.h"
 #include "Physics/Phase2_Cable/CradleParticleContact.h"
+#include "Physics/Line.h"
 
 //Springs
 #include "Physics/Spring/AnchoredSpring.h"
@@ -124,6 +125,13 @@ int main(void)
     physics::Cable* cables[5];
     for (int cable = 0; cable < 5; cable++) cables[cable] = new physics::Cable();
 
+    //Lines
+    vector<Line*> lines;
+    for (int i = 0; i < 5; i++) {
+        Line* line = new Line(anchors[i], spheres[i]->getParticleAddress());
+        lines.push_back(line);
+    }
+
     // +------------------------ DECLARE OBJECT WORLD ------------------------+
     ObjectWorld terra;
     terra.gravity = physics::Vector(0, gravity, 0);
@@ -205,6 +213,9 @@ int main(void)
 
         // +------------------------ UPDATES ------------------------+
         generalCamera.update();
+        for (int i = 0; i < lines.size(); i++) {
+            lines[i]->update(spheres[i]->getParticleAddress());
+        }
 
         // +------------------------ RENDER ------------------------+
         // Clear Screen
@@ -212,6 +223,9 @@ int main(void)
 
         // Render all objects
         terra.Render(shader, generalCamera);
+        for (auto& line : lines) {
+            line->draw();
+        }
 
         // +--------------------------------------------------------------------------------------------------------------------------+
 
@@ -226,6 +240,7 @@ int main(void)
     for (Object* obj : anchors) delete obj;
 
     for (physics::Cable* c : cables) delete c;
+    for (Line* line : lines) delete line;
 
     glfwTerminate();
     return 0;

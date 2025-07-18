@@ -45,6 +45,7 @@ public:
 	void setObjVel(float x, float y, float z);
 	void setObjAcc(float x, float y, float z);
 	void destroy();
+	void setRestitution(float _restitution);
 
 	//Physics
 	void addForce(physics::Vector force);
