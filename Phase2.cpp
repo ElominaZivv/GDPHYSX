@@ -157,10 +157,10 @@ int main(void)
 
     for (int i = 0; i < 5; i++) {
 
-        cout << "anchor: " << spheres[1]->getObjPos().x << endl;
+        //cout << "anchor: " << anchors[i]->getObjPos().x << endl;
         Line* line = new Line(anchors[i], spheres[i]->getParticleAddress());
         lines.push_back(line);
-        cout << "line: " << lines[i]->start.x <<endl;
+        //cout << "line: " << lines[i]->start.x <<endl;
     }
 
     //Initial force that moves the left most sphere 

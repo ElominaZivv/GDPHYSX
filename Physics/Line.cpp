@@ -1,7 +1,7 @@
 #include "Line.h"
 
 Line::Line(Object* anchor, physics::P6Particle* p) {
-    cout << "anchor passed: " << anchor->getObjPos().x <<endl;
+    //cout << "anchor passed: " << anchor->getObjPos().x <<endl;
     start = anchor->getObjPos();
     start.x = -85;
     sphere = p;
