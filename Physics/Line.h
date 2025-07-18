@@ -12,11 +12,12 @@
 class Line {
 	public:
 		physics::Vector start, end; //anchor and ball pos
+		physics::P6Particle* sphere;
 		float lineX1, lineX2, lineY1, lineY2;
 		GLuint VAO, VBO;
 
 		Line(Object* anchor, physics::P6Particle* p);
-		void update(physics::P6Particle* p);
+		void update();
 		void draw();
 	private:
 		void initialize();

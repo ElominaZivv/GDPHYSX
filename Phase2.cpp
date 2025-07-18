@@ -144,7 +144,7 @@ int main(void)
 
     for (int i = 0; i<5; i++)
     {
-        spheres[i]->setObjPos(particle_gap * (i-2), 0, 0.0f);
+        spheres[i]->setObjPos(particle_gap * (i-2), cableLength, 0.0f);
         spheres[i]->setMass(500.0f);
         spheres[i]->setRadius(particle_radius);
         spheres[i]->setRestitution(0.9);
@@ -208,13 +208,13 @@ int main(void)
         }
 
         // +------------------------ GET USER INPUT ------------------------+
-        glfwSetKeyCallback(window, key_callback);   //  Pause
+        glfwSetKeyCallback(window, key_callback);   //  Shove
         generalCamera.getUserInput(window);         //  Camera Controls
 
         // +------------------------ UPDATES ------------------------+
         generalCamera.update();
         for (int i = 0; i < lines.size(); i++) {
-            lines[i]->update(spheres[i]->getParticleAddress());
+            lines[i]->update();
         }
 
         // +------------------------ RENDER ------------------------+

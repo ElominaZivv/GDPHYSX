@@ -3,15 +3,16 @@
 Line::Line(Object* anchor, physics::P6Particle* p) {
     physics::Vector anchorPos = anchor->getObjPos();
     start = anchor->getObjPos();
-    end = p->pos;
+    sphere = p;
+    end = sphere->pos;
 
     initialize(); 
     updateVertexData();
 }
 
-void Line::update(physics::P6Particle* p) {
+void Line::update() {
 
-    end = p->pos;
+    end = sphere->pos;
 
     updateVertexData();
 }

@@ -163,6 +163,7 @@
     <ClCompile Include="Physics\ForceGenerator.cpp" />
     <ClCompile Include="Physics\ForceRegistry.cpp" />
     <ClCompile Include="Physics\GravityForceGenerator.cpp" />
+    <ClCompile Include="Physics\Line.cpp" />
     <ClCompile Include="Physics\Object.cpp" />
     <ClCompile Include="Physics\ObjectWorld.cpp" />
     <ClCompile Include="Physics\Particle.cpp" />
@@ -186,6 +187,7 @@
     <ClInclude Include="Physics\ForceGenerator.h" />
     <ClInclude Include="Physics\ForceRegistry.h" />
     <ClInclude Include="Physics\GravityForceGenerator.h" />
+    <ClInclude Include="Physics\Line.h" />
     <ClInclude Include="Physics\Object.h" />
     <ClInclude Include="Physics\ObjectWorld.h" />
     <ClInclude Include="Physics\Particle.h" />
