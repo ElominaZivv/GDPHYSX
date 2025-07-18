@@ -45,6 +45,7 @@ public:
 
 	//Physics
 	void addForce(physics::Vector force);
+	void AddForceAtPoint(physics::Vector force, physics::Vector refPoint);
 	void resetForce();
 
 	//Getters

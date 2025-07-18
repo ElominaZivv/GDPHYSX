@@ -1,9 +1,15 @@
 #ifndef VECTOR_H
 #define VECTOR_H
 
+#define GLM_ENABLE_EXPERIMENTAL
+
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <glm/gtx/quaternion.hpp>
+#include <glm/gtc/quaternion.hpp>
+
+
 
 #include <iostream>
 
@@ -74,8 +80,6 @@ namespace physics {
 
 		//Lesser than
 		bool operator< (const Vector rhs);
-
-
 	};
 }
 

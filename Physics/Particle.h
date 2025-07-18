@@ -18,39 +18,33 @@ namespace physics {
 		bool IsDestroyed = false;
 		float damping = 0.99f;
 		physics::Vector accumulatedForce = physics::Vector(0, 0, 0);
+		float angularDampening = 0.99f;
+		physics::Vector accummulatedTorque = physics::Vector(0, 0, 0);
 
 	public:
 		//Mass of the particle
 		float mass = 1.0f;
 		float radius = 1.0f;
 		float restitution = 1.0f;
+		float Rotation = 0.0f;
 
 		physics::Vector pos; //Position
 		physics::Vector vel; //Velocity
 		physics::Vector acc; //Acceleration
+		physics::Vector angularVel = physics::Vector(0, 0, 0);
 
 	protected:
 		void updatePos(float dTime);
 		void updateVel(float dTime);
+		virtual float MomentOfIntertia();
 
 	public:
 		void update(float dTime);
 		void destroy();
 		bool isDestroyed();
 		void addForce(physics::Vector force);
+		void AddForceAtPoint(physics::Vector force, physics::Vector refPoint);
 		void resetForce();
-	};
-
-	class PhysicsWorld
-	{
-	public:
-		std::list<P6Particle*> Particles;
-
-		void AddParticle(P6Particle* toAdd);
-		void Update(float dTime);
-
-	private:
-		void UpdateParticleList();
 	};
 }
 

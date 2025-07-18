@@ -95,15 +95,21 @@ int main(void)
     ObjectWorld terra;
 
     // +------------------------ OBJECT INITIALIZATIONS ------------------------+
-    sphere1.setObjPos(-50.0, -150.0, 0.0);
-    sphere1.setMass(5.f);
-    sphere1.setObjVel(0, -1000, 0);
+    sphere1.setObjPos(0.0, 0, 0.0);
+    sphere1.setMass(999.f);
+    sphere1.setObjVel(0, 0, 0);
     sphere1.setRadius(10.f);
 
-    sphere2.setObjPos(50.0, -150.0, 0.0);
-    sphere2.setMass(100.f);
+    sphere1.AddForceAtPoint
+    (
+        physics::Vector(-1, 0, 0) * 1000,
+        physics::Vector(0, -10, 0)
+    );
+
+    sphere2.setObjPos(50.0, 0.0, 0.0);
+    sphere2.setMass(1.f);
     sphere2.setObjVel(0, 0, 0);
-    sphere2.setRadius(15.f);
+    sphere2.setRadius(10.f);
 
     
     // +------------------------ PARTICLE LINKS ------------------------+

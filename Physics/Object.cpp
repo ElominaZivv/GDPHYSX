@@ -94,6 +94,11 @@ void Object::addForce(physics::Vector force)
 	particle.addForce(force);
 }
 
+void Object::AddForceAtPoint(physics::Vector _force, physics::Vector _refPoint)
+{
+	particle.AddForceAtPoint(_force, _refPoint);
+}
+
 void Object::resetForce()
 {
 	particle.resetForce();
