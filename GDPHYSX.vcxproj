@@ -155,6 +155,8 @@
     <ClCompile Include="HeaderFiles\Camera.cpp" />
     <ClCompile Include="HeaderFiles\Model3D.cpp" />
     <ClCompile Include="HeaderFiles\Shader.cpp" />
+    <ClCompile Include="HeaderFiles\stb_image.cpp" />
+    <ClCompile Include="HeaderFiles\Texture.cpp" />
     <ClCompile Include="HeaderFiles\tiny_obj_loader.cpp" />
     <ClCompile Include="HeaderFiles\VAO.cpp" />
     <ClCompile Include="main.cpp" />
@@ -177,6 +179,8 @@
     <ClInclude Include="HeaderFiles\Camera.h" />
     <ClInclude Include="HeaderFiles\Model3D.h" />
     <ClInclude Include="HeaderFiles\Shader.h" />
+    <ClInclude Include="HeaderFiles\stb_image.h" />
+    <ClInclude Include="HeaderFiles\Texture.h" />
     <ClInclude Include="HeaderFiles\tiny_obj_loader.h" />
     <ClInclude Include="HeaderFiles\VAO.h" />
     <ClInclude Include="Physics\ContactResolver.h" />
@@ -195,8 +199,13 @@
     <ClInclude Include="Physics\Vector.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Shaders\objectShaderF.frag" />
+    <None Include="Shaders\objectShaderV.vert" />
     <None Include="Shaders\solidColorShader.frag" />
     <None Include="Shaders\solidColorShader.vert" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Textures\ThreeHares.jpeg" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

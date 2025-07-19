@@ -4,7 +4,12 @@
 Object::Object(shared_ptr<VAO> modelVAO)
 {
 	model3D = new Model3D(modelVAO);
-};
+}
+Object::Object(shared_ptr<VAO> modelVAO, shared_ptr<Texture> texture)
+{
+	model3D = new Model3D(modelVAO, texture);
+}
+;
 
 //Destructor
 Object::~Object()
@@ -18,7 +23,7 @@ void Object::update(float dTime)
 	//Set the position of the model to the position of its particle component
 	model3D->modelPos = vec3(particle.pos);
 
-	MySillyFunctionThatChangesTheColorOfTheParticleBasedOnItsSpeed();
+	//MySillyFunctionThatChangesTheColorOfTheParticleBasedOnItsSpeed();
 }
 
 void Object::render(Shader shader, Camera camera)

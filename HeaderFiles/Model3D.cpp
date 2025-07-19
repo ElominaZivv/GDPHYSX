@@ -10,6 +10,19 @@ Model3D::Model3D(std::shared_ptr<VAO> newVAO) {
 	size = glm::vec3(1.0f, 1.0f, 1.0f);
 }
 
+Model3D::Model3D(shared_ptr<VAO> newVAO, shared_ptr<Texture> texture)
+{
+	modelVAO = newVAO;
+	this->texture = texture;
+	identity_matrix = mat4(1.f);
+	transform_matrix = mat4(1.f);
+
+	// Default Color: White
+	color = vec3(1.0f, 1.0f, 1.0f);
+	size = glm::vec3(1.0f, 1.0f, 1.0f);
+
+}
+
 void Model3D::draw(Shader shader, Camera camera) {
 	shader.activate();
 
@@ -19,6 +32,12 @@ void Model3D::draw(Shader shader, Camera camera) {
 
 	unsigned int projLoc = glGetUniformLocation(shader.getShader(), "projection");
 	glUniformMatrix4fv(projLoc, 1, GL_FALSE, value_ptr(camera.getProjectionMatrix()));
+
+	//Texture
+	
+	glBindTexture(GL_TEXTURE_2D, texture->getTexture());
+	GLuint tex0Address = glGetUniformLocation(shader.getShader(), "tex0");
+	glUniform1i(tex0Address, 0);
 
 	//Model position in the screen
 	unsigned int transformLoc = glGetUniformLocation(shader.getShader(), "transform");

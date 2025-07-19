@@ -54,7 +54,7 @@ namespace physics {
 		float magnitude = mag();
 		if (magnitude == 0)
 		{
-			cout << "You cannot divide components of vector by magnitude = 0. Returning physics::Vector(0,0,0)" << endl;
+			//cout << "You cannot divide components of vector by magnitude = 0. Returning physics::Vector(0,0,0)" << endl;
 			return physics::Vector(0, 0, 0);
 		}
 		return physics::Vector(x/magnitude,y/magnitude,z/magnitude);

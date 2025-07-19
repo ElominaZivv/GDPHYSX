@@ -1,6 +1,6 @@
 #include "Camera.h"
 
-Camera::Camera(float newWindowWidth, float newWindowHeight, float fov)
+Camera::Camera(float newWindowWidth, float newWindowHeight)
 {
 	windowWidth = newWindowWidth;
 	windowHeight = newWindowHeight;
@@ -9,24 +9,88 @@ Camera::Camera(float newWindowWidth, float newWindowHeight, float fov)
 	position = vec3(0.f, 0.f, 1.f);
 	cameraGaze = vec3(0.f, 0.f, 0.f); // Gaze is where the camera is looking.
 	viewMatrix = lookAt(position, cameraGaze, worldUp);
+
 	//Orthographic Camera by default
 	perspectiveCam = false;
 	orthoCam = true;
-	float z = 99999;
 	projectionMatrix = ortho(
 		-fov,
 		fov,
 		-fov,
 		fov,
-		-z,
-		z
+		zNear,
+		zFar
 	);
 }
 
 void Camera::update()
 {
-	cout << "update Camera" << endl;
 	//Update ProjectionMatrix based on the toggled Camera Mode (Perspective Or Ortho)
+	if (orthoCam)
+	{
+		projectionMatrix = ortho
+		(
+			-fov, fov,
+			-fov, fov,
+			zNear, zFar
+		);
+	}
+	if (perspectiveCam)
+	{
+		projectionMatrix = perspective
+		(
+			radians(fov),					//This is your FOV
+			windowHeight / windowWidth,		//Aspect ratio
+			zNear,							//z-Near, should never be <= 0
+			zFar							//z-Far   
+		);
+	}
+
+	viewMatrix = lookAt(position, cameraGaze, worldUp);
+}
+
+void Camera::getUserInput(GLFWwindow* window) {
+	if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS)
+	{
+		orthoCam = true;
+		perspectiveCam = false;
+	}
+
+	if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS)
+	{
+		orthoCam = false;
+		perspectiveCam = true;
+	}
+	if (glfwGetKey(window, GLFW_KEY_A)) {
+		//position.x -= .01f * distance;
+		thetaX -= 0.1f;
+	}
+	if (glfwGetKey(window, GLFW_KEY_D)) {
+		//position.x += .01f * distance;
+		thetaX += 0.1f;
+	}
+	if (glfwGetKey(window, GLFW_KEY_W)) {
+		//position.y += .01f * distance;
+		if (thetaY > -89.0f) thetaY -= 0.1f;
+	}
+	if (glfwGetKey(window, GLFW_KEY_S)) {
+		//position.y -= .01f * distance;
+		if (thetaY < 89.0f) thetaY += 0.1f;
+	}
+	if (glfwGetKey(window, GLFW_KEY_Q)) {
+		distance += 1.f;
+	}
+	if (glfwGetKey(window, GLFW_KEY_E)) {
+		distance -= 1.f;
+	}
+
+	// 3rd person camera movement (Thin Matrix, 2024)
+	float groundDist = distance * cos(radians(thetaY));
+	position = vec3(
+		cameraGaze.x + (groundDist * sin(radians(thetaX))),
+		cameraGaze.y + (-distance * sin(radians(thetaY))),
+		cameraGaze.z + (groundDist * cos(radians(thetaX)))
+	);
 }
 
 void Camera::toggleCam()

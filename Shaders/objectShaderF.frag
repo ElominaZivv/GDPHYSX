@@ -2,6 +2,28 @@
 
 uniform sampler2D tex0;
 
+//Point Light
+uniform vec3 lightPos;
+uniform vec3 lightColor;
+uniform float lightLumens;
+
+uniform float ambientStr;
+uniform vec3 ambientColor;
+
+uniform vec3 cameraPos;
+uniform float specStr;
+uniform float specPhong;
+
+//Direction Light
+uniform vec3 dirLightDirection;
+uniform vec3 dirLightColor;
+uniform float dirLightLumens;
+
+uniform float dirAmbientStr;
+uniform vec3 dirAmbientColor;
+
+uniform float dirSpecStr;
+uniform float dirSpecPhong;
 
 in vec2 texCoord;
 in vec3 normCoord;
@@ -11,6 +33,8 @@ out vec4 FragColor;
 
 void main(){
 	vec3 normal = normalize(normCoord);
+
+	/*
 	//Point Light
 	vec3 lightDir = normalize(lightPos - fragPos);
 
@@ -34,5 +58,14 @@ void main(){
 	vec3 dirLightDiffuse = dirLightDiff * dirLightColor;
 
 	vec3 dirAmbientCol = dirAmbientColor * dirAmbientStr;
+
+	vec3 dirViewDir = normalize(cameraPos - fragPos);
+	vec3 dirReflectDir = reflect(-dirLightDir, normal);
+	float dirSpec = pow(max(dot(dirReflectDir, dirViewDir), 0.1), dirSpecPhong);
+	vec3 dirSpecColor = dirSpec* dirSpecStr * dirLightColor;
+	vec4 directionLightVal = vec4(dirSpecColor + dirLightDiffuse + dirAmbientCol, 1.0)*dirLightLumens;
+	vec4 finalLightVal=pointLightVal+directionLightVal;
+	*/
+
 	FragColor = texture(tex0, texCoord);
 }

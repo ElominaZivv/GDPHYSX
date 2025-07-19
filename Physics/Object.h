@@ -3,6 +3,7 @@
 
 #include "../HeaderFiles/Model3D.h"
 #include "../HeaderFiles/VAO.h"
+#include "../HeaderFiles/Texture.h"
 #include "../HeaderFiles/Shader.h"
 #include "../HeaderFiles/Camera.h"
 
@@ -22,7 +23,8 @@ private:
 
 public:
 	//Constructor
-	Object(shared_ptr<VAO> modelVAO);
+	Object(shared_ptr<VAO> modelVAO);	// Without Texture
+	Object(shared_ptr<VAO> modelVAO, shared_ptr<Texture> texture);	// With Texture
 	//Destructor
 	~Object();
 

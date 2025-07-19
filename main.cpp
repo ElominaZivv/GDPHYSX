@@ -8,8 +8,12 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-//My Header Files
+//Other Headers
 #include "HeaderFiles/tiny_obj_loader.h"
+#include "HeaderFiles/stb_image.h"
+
+//My Header Files
+#include "HeaderFiles/Texture.h"
 #include "HeaderFiles/Model3D.h"
 #include "HeaderFiles/Camera.h"
 #include "HeaderFiles/VAO.h"
@@ -74,22 +78,26 @@ int main(void)
     glfwSetKeyCallback(window, key_callback);
 
     // +------------------------ DECLARE SHADERS ------------------------+
-    Shader shader("Shaders/solidColorShader.vert", "Shaders/solidColorShader.frag");
+    //Shader shader("Shaders/solidColorShader.vert", "Shaders/solidColorShader.frag");
+    Shader shader("Shaders/objectShaderV.vert", "Shaders/objectShaderF.frag");
 
     // +------------------------ DECLARE VAOs ------------------------+
     //Smart pointer that is shared and not copied when passed into the constructor of a class.
     //When out of scope, it will delete itself
     auto sphereVAO = make_shared<VAO>("3D/sphere.obj");
+    //auto sphereVAO = make_shared<VAO>("3D/plane.obj");
+
+    // +------------------------ DECLARE TEXTURE ------------------------+
+    auto texture = make_shared<Texture>("Textures/Back.png");
 
     // +------------------------ DECLARE CAMERA ------------------------+
     float windowWidth = 700.0f;
     float windowHeight = 700.0f;
-    float fov = 300.f;
-    Camera orthoCam(windowWidth, windowHeight, fov);
+    Camera generalCamera(windowWidth, windowHeight);
 
     // +------------------------ DECLARE OBJECTS ------------------------+
-    Object sphere1(sphereVAO);
-    Object sphere2(sphereVAO);
+    Object sphere1(sphereVAO, texture);
+    Object sphere2(sphereVAO, texture);
 
     // +------------------------ DECLARE OBJECT WORLD ------------------------+
     ObjectWorld terra;
@@ -98,31 +106,35 @@ int main(void)
     sphere1.setObjPos(0.0, 0, 0.0);
     sphere1.setMass(999.f);
     sphere1.setObjVel(0, 0, 0);
-    sphere1.setRadius(10.f);
+    sphere1.setRadius(25.f);
 
+    
     sphere1.AddForceAtPoint
     (
         physics::Vector(-1, 0, 0) * 1000,
         physics::Vector(0, -10, 0)
     );
+    
 
-    sphere2.setObjPos(50.0, 0.0, 0.0);
+    sphere2.setObjPos(-50.0, 0.0, 0.0);
     sphere2.setMass(1.f);
     sphere2.setObjVel(0, 0, 0);
     sphere2.setRadius(10.f);
 
     
     // +------------------------ PARTICLE LINKS ------------------------+
+    /*
     physics::Rod* r = new physics::Rod();
     r->particles[1] = sphere1.getParticleAddress();
     r->particles[0] = sphere2.getParticleAddress();
     r->length=100.0f;
+    */
 
     
     // +------------------------ PUSH OBJECTS INTO OBJECT WORLD ------------------------+
     terra.AddObject(&sphere1);
     terra.AddObject(&sphere2);
-    terra.Links.push_back(r);
+    //terra.Links.push_back(r);
 
     // +------------------------ TIME ------------------------+
     //Initialize the clock and variables
@@ -131,9 +143,15 @@ int main(void)
     auto prev_time = curr_time;
     std::chrono::nanoseconds curr_ns(0);
 
+    glEnable(GL_DEPTH_TEST);
+
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
     {
+        // +------------------------ GET USER INPUT ------------------------+
+        glfwSetKeyCallback(window, key_callback);   //  Shove
+        generalCamera.getUserInput(window);         //  Camera Controls
+
         // +------------------------ DELTA TIME ------------------------+
         //Get Current time
         curr_time = clock::now();
@@ -148,6 +166,8 @@ int main(void)
 
 
         // +------------------------ UPDATES ------------------------+
+        generalCamera.update();
+
         if (curr_ns >= timestep) // Fixed Updates
         {
             //Convert ns to ms
@@ -164,13 +184,12 @@ int main(void)
             }
         }
         
-
         // +------------------------ RENDER ------------------------+
         // Clear Screen
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // Render all objects
-        terra.Render(shader, orthoCam);
+        terra.Render(shader, generalCamera);
 
         // +--------------------------------------------------------------------------------------------------------------------------+
 
@@ -180,7 +199,7 @@ int main(void)
         /* Poll for and process events */
         glfwPollEvents();
     }
-    delete r;
+    //delete r;
 
     glfwTerminate();
     return 0;
