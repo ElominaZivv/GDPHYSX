@@ -2,6 +2,7 @@
 
 Texture::Texture(string textureFilePath)
 {
+    // This fails sometimes ermm...
     stbi_set_flip_vertically_on_load(true);
 
     //1st para: path of image
