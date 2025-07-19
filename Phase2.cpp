@@ -53,9 +53,6 @@ float particle_gap = 85.0f;
 float cableLength = 300.0f;
 float gravity = -9.8f;
 
-//printf("Initial Force : ");
-//scanf("%f",  &initialForce);
-
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
     if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) spheres[0]->setObjVel(initialForce, 0.0f, 0.0f);
@@ -80,7 +77,6 @@ int main(void)
     /* Make the window's context current */
     glfwMakeContextCurrent(window);
     gladLoadGL();
-
 
     // +------------------------ GET USER INPUT ------------------------+
     glfwSetKeyCallback(window, key_callback);
@@ -141,7 +137,7 @@ int main(void)
     for (int i = 0; i<5; i++)
     {
         spheres[i]->setObjPos(particle_gap * (i-2), cableLength, 0.0f);
-        spheres[i]->setMass(500.0f);
+        spheres[i]->setMass(50.0f);
         spheres[i]->setRadius(particle_radius);
         spheres[i]->setRestitution(0.9);
 
@@ -150,21 +146,12 @@ int main(void)
         cables[i]->particles[0] = spheres[i]->getParticleAddress();
         cables[i]->particles[1] = anchors[i]->getParticleAddress();
         cables[i]->length = cableLength;
-
-
-        
     }
 
     for (int i = 0; i < 5; i++) {
-
-        //cout << "anchor: " << anchors[i]->getObjPos().x << endl;
         Line* line = new Line(anchors[i], spheres[i]->getParticleAddress());
         lines.push_back(line);
-        //cout << "line: " << lines[i]->start.x <<endl;
     }
-
-    //Initial force that moves the left most sphere 
-    /*spheres[0]->setObjVel(initialForce, 0.0f, 0.0f);*/
     
     // +------------------------ PUSH OBJECTS INTO OBJECT WORLD ------------------------+
     for (Object* obj : spheres) terra.AddObject(obj, true);
@@ -230,9 +217,9 @@ int main(void)
 
         // Render all objects
         terra.Render(shader, generalCamera);
-        /*for (auto& line : lines) {
-            line->draw();
-        }*/
+        for (auto& line : lines) {
+            line->draw(shader, generalCamera);
+        }
 
         // +--------------------------------------------------------------------------------------------------------------------------+
 

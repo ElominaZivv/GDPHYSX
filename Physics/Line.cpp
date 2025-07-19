@@ -1,10 +1,15 @@
 #include "Line.h"
 
-Line::Line(Object* anchor, physics::P6Particle* p) {
-    //cout << "anchor passed: " << anchor->getObjPos().x <<endl;
-    start = anchor->getObjPos();
-    start.x = -85;
+Line::Line(Object* a, physics::P6Particle* p) {
+
+    transform_matrix = mat4(1.f);
     sphere = p;
+
+    //anchor position
+    start = a->getObjPos();
+    start.y += 40.f; 
+
+    //sphere position
     end = sphere->pos;
 
     initialize(); 
@@ -13,12 +18,23 @@ Line::Line(Object* anchor, physics::P6Particle* p) {
 
 void Line::update() {
 
+    //update the end of the line to the spheres position
     end = sphere->pos;
-
     updateVertexData();
 }
 
-void Line::draw() {
+void Line::draw(Shader shader, Camera camera) {
+
+    shader.activate();
+
+    unsigned int viewLoc = glGetUniformLocation(shader.getShader(), "view");
+    glUniformMatrix4fv(viewLoc, 1, GL_FALSE, value_ptr(camera.getViewMatrix()));
+
+    unsigned int projLoc = glGetUniformLocation(shader.getShader(), "projection");
+    glUniformMatrix4fv(projLoc, 1, GL_FALSE, value_ptr(camera.getProjectionMatrix()));
+
+    unsigned int transformLoc = glGetUniformLocation(shader.getShader(), "transform");
+    glUniformMatrix4fv(transformLoc, 1, GL_FALSE, value_ptr(transform_matrix));
 
     glBindVertexArray(VAO);
     glDrawArrays(GL_LINES, 0, 2);
@@ -41,7 +57,6 @@ void Line::initialize() {
     // Allocate space
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), nullptr, GL_DYNAMIC_DRAW);
 
-    // Vertex attribute: location = 0, vec3
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 

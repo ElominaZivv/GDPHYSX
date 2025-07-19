@@ -13,14 +13,15 @@ class Line {
 	public:
 		physics::Vector start, end; //anchor and ball pos
 		physics::P6Particle* sphere;
-		float lineX1, lineX2, lineY1, lineY2;
 		GLuint VAO, VBO;
+
+		mat4 transform_matrix;
 
 		Line(Object* anchor, physics::P6Particle* p);
 		~Line();
 
 		void update();
-		void draw();
+		void draw(Shader shader, Camera camera);
 	private:
 		void initialize();
 		void updateVertexData();
