@@ -7,10 +7,24 @@ namespace physics {
 		//pos = pos + (vel *= dTime);
 		// P2 = P1 + (ViT) + ((At^2)/2)
 		pos = pos + (vel * dTime) + ((acc * (dTime * dTime)) * (1.0 / 2.0));
+	}
+	void P6Particle::updateVel(float dTime)
+	{
+		//	F			=	a					*		m
+		this->acc += accumulatedForce * (1.f / mass);
 
-		float angleMag = angularVel.mag();
-		Vector angularV = angularVel*dTime;
+		vel = vel + (acc * dTime);
+
+		//				vF			d^t
+		this->vel = this->vel * powf(damping, dTime);
+	}
+
+	void P6Particle::updateRotation(float dTime)
+	{
+		// Update Rotation
+		Vector angularV = angularVel * dTime;
 		//Get Mag
+		float angleMag = 0.0f;
 		angleMag = angularV.mag();
 		//Get Dir
 		Vector magDir = angularV.dir();
@@ -23,42 +37,34 @@ namespace physics {
 				(glm::vec3)magDir
 			);
 
-			
-			//this->Rotation =	
-			//	glm::ToMat4
-			//	(
-			//		//convert mat4 rotation to quaternion
-			//		glm::ToQuat(this->Rotation) * rotBy; //Multiply the 2 quaternions
-			//	);
-			
+
+			this->rotation =	
+				glm::toMat4
+				(
+					//convert mat4 rotation to quaternion
+					glm::toQuat(this->rotation) * rotBy //Multiply the 2 quaternions
+				);
 		}
-
-	}
-	void P6Particle::updateVel(float dTime)
-	{
-		//	F			=	a					*		m
-		this->acc += accumulatedForce * (1.f / mass);
-
-		vel = vel + (acc * dTime);
-
-		//				vF			d^t
-		this->vel = this->vel * powf(damping, dTime);
-
-		// Angular
-		float mI = MomentOfIntertia();
-		angularVel += accummulatedTorque * ((float)1 / mI) * dTime;
-		angularVel = angularVel * powf(angularDampening, dTime);
 	}
 
 	float P6Particle::MomentOfIntertia()
 	{
-		return ((float)2 / 5);
+		return ((float)2 / 5) * mass * radius *radius;
+	}
+
+	void P6Particle::computeAngularVelocity(float dTime)
+	{
+		float mI = MomentOfIntertia();
+		angularVel += accummulatedTorque * ((float)1 / mI) * dTime;
+		angularVel = angularVel * powf(angularDampening, dTime);
 	}
 
 	void P6Particle::update(float dTime) {//this is to be called by the engine
 		//Always call updatePos BEFORE updateVel
 		this->updatePos(dTime);
 		this->updateVel(dTime);
+		this->updateRotation(dTime);
+		this->computeAngularVelocity(dTime);
 		resetForce();
 	}
 	void P6Particle::destroy()
@@ -77,12 +83,14 @@ namespace physics {
 
 	void P6Particle::AddForceAtPoint(physics::Vector force, physics::Vector refPoint)
 	{
-		std::cout << "something" << std::endl;
+		addForce(force);
+		this->accummulatedTorque = refPoint.cross(force);
 	}
 
 	void P6Particle::resetForce()
 	{
 		this->accumulatedForce = physics::Vector(0, 0, 0);
+		this->accummulatedTorque = physics::Vector(0, 0, 0);
 		this->acc = physics::Vector(0, 0, 0);
 	}
 }

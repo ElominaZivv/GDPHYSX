@@ -26,7 +26,7 @@ namespace physics {
 		float mass = 1.0f;
 		float radius = 1.0f;
 		float restitution = 1.0f;
-		float Rotation = 0.0f;
+		glm::mat4 rotation = glm::mat4(1.0f);
 
 		physics::Vector pos; //Position
 		physics::Vector vel; //Velocity
@@ -36,7 +36,9 @@ namespace physics {
 	protected:
 		void updatePos(float dTime);
 		void updateVel(float dTime);
+		void updateRotation(float dTime);
 		virtual float MomentOfIntertia();
+		void computeAngularVelocity(float dTime);
 
 	public:
 		void update(float dTime);

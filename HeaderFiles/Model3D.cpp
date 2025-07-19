@@ -45,6 +45,7 @@ void Model3D::draw(Shader shader, Camera camera) {
 	//Transformation (translation, scale, and rotations)
 	transform_matrix = translate(identity_matrix, modelPos);
 	transform_matrix = scale(transform_matrix, size);
+	transform_matrix = transform_matrix * rotation;
 
 	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, value_ptr(transform_matrix));
 

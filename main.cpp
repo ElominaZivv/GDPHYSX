@@ -4,9 +4,13 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#define GLM_ENABLE_EXPERIMENTAL
+
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <glm/gtx/quaternion.hpp>
+#include <glm/gtc/quaternion.hpp>
 
 //Other Headers
 #include "HeaderFiles/tiny_obj_loader.h"
@@ -44,7 +48,7 @@ constexpr::std::chrono::nanoseconds timestep(16ms);
 
 
 // +------------------------+ DEVELOPER STUFFS +------------------------+
-bool isPaused = false;
+bool isPaused = true;
 
 
 // +------------------------+ USER INPUTS +------------------------+
@@ -104,20 +108,18 @@ int main(void)
 
     // +------------------------ OBJECT INITIALIZATIONS ------------------------+
     sphere1.setObjPos(0.0, 0, 0.0);
-    sphere1.setMass(999.f);
+    sphere1.setMass(10.0f);
     sphere1.setObjVel(0, 0, 0);
-    sphere1.setRadius(25.f);
+    sphere1.setRadius(10.f);
 
-    
     sphere1.AddForceAtPoint
     (
-        physics::Vector(-1, 0, 0) * 1000,
+        physics::Vector(-10000, 0, 0),
         physics::Vector(0, -10, 0)
     );
-    
 
     sphere2.setObjPos(-50.0, 0.0, 0.0);
-    sphere2.setMass(1.f);
+    sphere2.setMass(10.f);
     sphere2.setObjVel(0, 0, 0);
     sphere2.setRadius(10.f);
 

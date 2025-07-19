@@ -23,6 +23,7 @@ private:
 
 public:
 	vec3 modelPos;
+	mat4 rotation;
 	vec3 color, size;
 	Model3D(shared_ptr<VAO> newVAO);
 	Model3D(shared_ptr<VAO> newVAO, shared_ptr<Texture> texture);
