@@ -25,6 +25,8 @@
 #include "Physics/ContactResolver.h"
 #include "Physics/Phase2_Cable/Cable.h"
 #include "Physics/Phase2_Cable/CradleParticleContact.h"
+#include "Physics/ParticleLink/AnchoredRod.h"
+#include "Physics/ParticleLink/AnchoredRodParticleContact.h"
 #include "Physics/Line.h"
 
 //Springs
@@ -44,10 +46,15 @@ constexpr::std::chrono::nanoseconds timestep(16ms);
 
 // +------------------------+ DEVELOPER STUFFS +------------------------+
 bool isPaused = false;
+bool isSpun = false;
+bool isStopped = false;
+
+// +------------------------+ DECLARE OBJECT WORLD +------------------------+
+ObjectWorld terra;
 
 // +------------------------+ USER INPUTS +------------------------+
 Object* spheres[5];
-float initialForce = -70.0f;
+float initialForce = 999.999f;
 float particle_radius = 40.0f;
 float particle_gap = 85.0f;
 float cableLength = 300.0f;
@@ -55,7 +62,15 @@ float gravity = -9.8f;
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-    if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) spheres[0]->setObjVel(initialForce, 0.0f, 0.0f);
+    if (key == GLFW_KEY_ENTER && action == GLFW_PRESS && !isSpun)
+    {
+        spheres[0]->setObjVel(initialForce, 0.0f, 0.0f);
+        isSpun = true;
+    }
+    if (key == GLFW_KEY_ENTER && action == GLFW_PRESS && isStopped)
+    {
+        terra.findTopMostParticle();
+    }
 }
 
 int main(void)
@@ -67,7 +82,7 @@ int main(void)
         return -1;
 
     /* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(800,800, "Phase2_Grouping2_Chen-Elomina-Naranjo", NULL, NULL);
+    window = glfwCreateWindow(800,800, "Elomina", NULL, NULL);
     if (!window)
     {
         glfwTerminate();
@@ -84,6 +99,7 @@ int main(void)
     // skibidii toillet
     printf("Initial Force : ");
     cin >> initialForce;
+    /*
     printf("Particle Radius : ");
     cin >> particle_radius;
     printf("Particle Gap : ");
@@ -92,6 +108,7 @@ int main(void)
     cin >> cableLength;
     printf("Gravity : ");
     cin >> gravity;
+    */
 
     // +------------------------ DECLARE SHADERS ------------------------+
     Shader shader("Shaders/solidColorShader.vert", "Shaders/solidColorShader.frag");
@@ -107,56 +124,88 @@ int main(void)
     float fov = 800.f;
     Camera generalCamera(windowWidth, windowHeight, fov);
 
-    // +------------------------ PHASE 2 ------------------------+
+    // +------------------------ PROGRAMMING CHALLENGE 2 ------------------------+
     // +------------------------ DECLARE OBJECTS ------------------------+
     // Spheres
     /*Object* spheres[5];*/
     for (int sphere = 0; sphere < 5; sphere++) spheres[sphere] = new Object(sphereVAO);
     
     // Anchor
-    Object* anchors[5];
-    for (int a = 0; a < 5; a++) anchors[a] = new Object(sphereVAO);
+    Object* center;
+    center = new Object(sphereVAO);
 
     //Cables
-    physics::Cable* cables[5];
-    for (int cable = 0; cable < 5; cable++) cables[cable] = new physics::Cable();
+    physics::AnchoredRod* spokes[5];
+    for (int spoke = 0; spoke < 5; spoke++) spokes[spoke] = new physics::AnchoredRod();
+
+    //Rod
+    physics::Rod* rods[5];
+    for (int rod = 0; rod < 5; rod++) rods[rod] = new physics::Rod();
 
     //Lines
     vector<Line*> lines;
 
+    float particle_radius = 50.0;
+    float cableLength = 400.0f;
+    float gravity = 0.0f;
     // +------------------------ DECLARE OBJECT WORLD ------------------------+
-    ObjectWorld terra;
     terra.gravity = physics::Vector(0, gravity, 0);
 
     // +------------------------ OBJECT INITIALIZATIONS ------------------------+
-    /*float initialForce = -70.0f;
-    float particle_radius = 40.0f;
-    float particle_gap = 85.0f;
-    float cableLength = 300.0f;*/
+    // Set Sphere Prize
+    spheres[0]->prize = " +15 Speed     (blue)";
+    spheres[1]->prize = " +20 Stamina   (ourple)";
+    spheres[2]->prize = " +25 Power     (pink)";
+    spheres[3]->prize = " +30 Guts      (yellow)";
+    spheres[4]->prize = " +35 Wit       (green)";
+
+    // Set Sphere Position
+    spheres[0]->setObjPos(0,1.f * cableLength, 0.0f);
+    spheres[1]->setObjPos(0.95542f * cableLength, 0.29524f * cableLength, 0.0f);
+    spheres[2]->setObjPos(0.70761f * cableLength, -0.70661f * cableLength, 0.0f);
+    spheres[3]->setObjPos(-0.70761f * cableLength, -0.70661f * cableLength, 0.0f);
+    spheres[4]->setObjPos(-0.95542f * cableLength, 0.29524f * cableLength, 0.0f);
+
+    //Set Sphere Color
+    spheres[0]->setColor(45, 0, 255);
+    spheres[1]->setColor(170, 0, 255);
+    spheres[2]->setColor(255, 0, 135);
+    spheres[3]->setColor(255, 250, 0);
+    spheres[4]->setColor(0,255,0);
+
+    // Set Center Position
+    center->setObjPos(0.0f, 0.0f, 0.0f);
+    center->setDamping(0.0f);
+    center->setColor(1,1,1);
+    center->setRadius(250);
 
     for (int i = 0; i<5; i++)
     {
-        spheres[i]->setObjPos(particle_gap * (i-2), cableLength, 0.0f);
         spheres[i]->setMass(50.0f);
         spheres[i]->setRadius(particle_radius);
         spheres[i]->setRestitution(0.9);
 
-        anchors[i]->setObjPos(particle_gap * (i - 2), cableLength, 0.0f);
-        anchors[i]->setRadius(5.0f);
-        cables[i]->particles[0] = spheres[i]->getParticleAddress();
-        cables[i]->particles[1] = anchors[i]->getParticleAddress();
-        cables[i]->length = cableLength;
+        // Rod
+        rods[i]->particles[0] = spheres[i]->getParticleAddress();
+        rods[i]->particles[1] = spheres[(i+1)%5]->getParticleAddress();
+        // Rod length is approximately 1.0320432249 * cableLength
+        rods[i]->length = 1.0320432249 * cableLength;
+
+        spokes[i]->particles[0] = spheres[i]->getParticleAddress();
+        spokes[i]->particles[1] = center->getParticleAddress();
+        spokes[i]->length = cableLength;
     }
 
     for (int i = 0; i < 5; i++) {
-        Line* line = new Line(anchors[i], spheres[i]->getParticleAddress());
+        Line* line = new Line(center->getParticleAddress(), spheres[i]->getParticleAddress());
         lines.push_back(line);
     }
     
     // +------------------------ PUSH OBJECTS INTO OBJECT WORLD ------------------------+
     for (Object* obj : spheres) terra.AddObject(obj, true);
-    for (Object* obj : anchors) terra.AddObject(obj, false);
-    for (int n = 0; n < 5; n++) terra.Links.push_back(cables[n]);
+    terra.AddObject(center, false);
+    for (int n = 0; n < 5; n++) terra.Links.push_back(spokes[n]);
+    for (int n = 0; n < 5; n++) terra.Links.push_back(rods[n]);
 
     // +------------------------ TIME ------------------------+
     //Initialize the clock and variables
@@ -181,7 +230,7 @@ int main(void)
 
         //Add the duration since the last iteration
         //to the time since our last "frame"
-        curr_ns += dur;
+        curr_ns += dur*5;
 
 
         // +------------------------ UPDATES ------------------------+
@@ -198,6 +247,7 @@ int main(void)
             {
                 float deltaTime = (float)ms.count() / 1000;
                 terra.Update(deltaTime);
+                isStopped=terra.checkStop(isSpun);
             }
         }
 
@@ -231,11 +281,30 @@ int main(void)
     }
     //Delete Spheres, Anchors, and Cables
     for (Object* obj : spheres) delete obj;
-    for (Object* obj : anchors) delete obj;
+    delete center;
 
-    for (physics::Cable* c : cables) delete c;
+    for (physics::AnchoredRod* ar : spokes) delete ar;
+    for (physics::Rod* r : rods) delete r;
     for (Line* line : lines) delete line;
 
     glfwTerminate();
     return 0;
 }
+
+/*
+5 spheres
+50 kg sphere
+Roullete
+All spheres are different colors
+outcome per sphere 
+result should be on the top most
+
+Before simulation, print outcomes for each sphere (all unique)
+It should stop (dampening, or space to decelerate)
+Print result on the terminal window
+
+All particles should be visible
+Build it as release
+
+submit as a ZIP
+*/

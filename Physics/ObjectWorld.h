@@ -25,6 +25,7 @@ protected:
 	void GenerateContacts();
 	physics::ContactResolver contactResolver = physics::ContactResolver(20);
 	void GetOverlaps();
+	bool isStop = false;
 
 public:
 	physics::ForceRegistry registry;
@@ -42,6 +43,8 @@ public:
 
 	//Silly Functions
 	void atCenter();
+	void findTopMostParticle();
+	bool checkStop(bool isSpun);
 	
 	// Put it here for now to modify it
 	physics::GravityForceGenerator gravity = physics::GravityForceGenerator(physics::Vector(0, -9.8f, 0));

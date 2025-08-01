@@ -45,6 +45,11 @@ namespace physics{
 		this->acc = physics::Vector(0, 0, 0);
 	}
 
+	void P6Particle::setDamping(float _damping)
+	{
+		damping = _damping;
+	}
+
 	void PhysicsWorld::AddParticle(P6Particle* toAdd)
 	{
 		Particles.push_back(toAdd);

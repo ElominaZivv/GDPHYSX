@@ -12,12 +12,13 @@
 class Line {
 	public:
 		physics::Vector start, end; //anchor and ball pos
+		physics::P6Particle* anchor;
 		physics::P6Particle* sphere;
 		GLuint VAO, VBO;
 
 		mat4 transform_matrix;
 
-		Line(Object* anchor, physics::P6Particle* p);
+		Line(physics::P6Particle* _anchor, physics::P6Particle* p);
 		~Line();
 
 		void update();

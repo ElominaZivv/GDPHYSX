@@ -23,6 +23,7 @@ private:
 	float radius;
 
 public:
+	string prize = "default";
 	//Constructor
 	Object();
 	Object(shared_ptr<VAO> modelVAO);
@@ -46,6 +47,7 @@ public:
 	void setObjAcc(float x, float y, float z);
 	void destroy();
 	void setRestitution(float _restitution);
+	void setDamping(float _damping);
 
 	//Physics
 	void addForce(physics::Vector force);
@@ -56,6 +58,7 @@ public:
 	float GetRadius();
 	float GetRestitution();
 	bool isDestroyed();
+	float getMag();
 };
 
 #endif

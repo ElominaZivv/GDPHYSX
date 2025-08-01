@@ -40,7 +40,7 @@ namespace physics
 				contacts.begin(),	// Beginning of vector
 				contacts.end(),		// End of vector
 				[]					// [] lambda function is an anonymous function called in-line
-				(const ParticleContact* a, const ParticleContact* b)	//  Parameters of Lambda function
+			(const ParticleContact* a, const ParticleContact* b)	//  Parameters of Lambda function
 				{
 					//Sort the particle contacts by either the least separating speed
 					return a->fSeparatingSpeed < b->fSeparatingSpeed;	// Lambda function definition
@@ -53,7 +53,7 @@ namespace physics
 				contacts.begin(),	// Beginning of vector
 				contacts.end(),		// End of vector
 				[]					// [] lambda function is an anonymous function called in-line
-				(const ParticleContact* a, const ParticleContact* b)	//  Parameters of Lambda function
+			(const ParticleContact* a, const ParticleContact* b)	//  Parameters of Lambda function
 				{
 					//Sort the particle contacts by either the least separating speed OR the greatest depth
 					return a->depth > b->depth;			// Lambda function definition

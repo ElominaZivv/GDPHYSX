@@ -1,16 +1,12 @@
 #include "Line.h"
 
-Line::Line(Object* a, physics::P6Particle* p) {
+Line::Line(physics::P6Particle* _anchor, physics::P6Particle* p) {
 
     transform_matrix = mat4(1.f);
     sphere = p;
 
     //anchor position
-    start = a->getObjPos();
-    start.y += 40.f; 
-
-    //sphere position
-    end = sphere->pos;
+    anchor = _anchor;
 
     initialize(); 
     updateVertexData();
@@ -19,6 +15,7 @@ Line::Line(Object* a, physics::P6Particle* p) {
 void Line::update() {
 
     //update the end of the line to the spheres position
+    start = anchor->pos;
     end = sphere->pos;
     updateVertexData();
 }

@@ -179,3 +179,41 @@ void ObjectWorld::atCenter()
 		}
 	}
 }
+
+void ObjectWorld::findTopMostParticle()
+{
+	//Update all objects
+	float highestY = 0.0f;
+	string highestPrize = " ";
+
+	for (std::list<Object*>::iterator obj = Objects.begin();
+		obj != Objects.end();
+		obj++
+		)
+	{
+		if ((*obj)->getObjPos().y > highestY)
+		{
+			highestPrize = (*obj)->prize;
+			highestY = (*obj)->getObjPos().y;
+		}
+	}
+	std::cout << "	"<<highestPrize << std::endl;
+}
+
+bool ObjectWorld::checkStop(bool isSpun)
+{
+	if (isSpun)
+	{
+		int check = 0;
+		for (std::list<Object*>::iterator obj = Objects.begin();
+			obj != Objects.end();
+			obj++
+			)
+		{
+			if ((*obj)->prize != "default" && (*obj)->getMag() <= 1.0f) check++;
+			if (check == 5 && isStop == false) std::cout << "	You win..."<<std::endl;
+			if (check == 5) isStop = true;
+		}
+	}
+	return isStop;
+}

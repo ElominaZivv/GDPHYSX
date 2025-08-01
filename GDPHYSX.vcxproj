@@ -157,7 +157,9 @@
     <ClCompile Include="HeaderFiles\Shader.cpp" />
     <ClCompile Include="HeaderFiles\tiny_obj_loader.cpp" />
     <ClCompile Include="HeaderFiles\VAO.cpp" />
-    <ClCompile Include="Phase2.cpp" />
+    <ClCompile Include="Physics\ParticleLink\AnchoredRod.cpp" />
+    <ClCompile Include="Physics\ParticleLink\AnchoredRodParticleContact.cpp" />
+    <ClCompile Include="ProgrammingChallenge2.cpp" />
     <ClCompile Include="Physics\ContactResolver.cpp" />
     <ClCompile Include="Physics\DragForceGenerator.cpp" />
     <ClCompile Include="Physics\ForceGenerator.cpp" />
@@ -192,6 +194,8 @@
     <ClInclude Include="Physics\ObjectWorld.h" />
     <ClInclude Include="Physics\Particle.h" />
     <ClInclude Include="Physics\ParticleContact.h" />
+    <ClInclude Include="Physics\ParticleLink\AnchoredRod.h" />
+    <ClInclude Include="Physics\ParticleLink\AnchoredRodParticleContact.h" />
     <ClInclude Include="Physics\ParticleLink\ParticleLink.h" />
     <ClInclude Include="Physics\ParticleLink\Rod.h" />
     <ClInclude Include="Physics\Phase2_Cable\Cable.h" />

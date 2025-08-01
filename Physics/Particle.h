@@ -39,6 +39,7 @@ namespace physics {
 		bool isDestroyed();
 		void addForce(physics::Vector force);
 		void resetForce();
+		void setDamping(float _damping);
 	};
 
 	class PhysicsWorld
