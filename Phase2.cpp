@@ -51,7 +51,7 @@ float initialForce = -70.0f;
 float particle_radius = 40.0f;
 float particle_gap = 85.0f;
 float cableLength = 300.0f;
-float gravity = -9.8f;
+float gravity = 0;
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
@@ -82,16 +82,16 @@ int main(void)
     glfwSetKeyCallback(window, key_callback);
 
     // skibidii toillet
-    printf("Initial Force : ");
-    cin >> initialForce;
-    printf("Particle Radius : ");
-    cin >> particle_radius;
-    printf("Particle Gap : ");
-    cin >> particle_gap;
-    printf("Cable Length : ");
-    cin >> cableLength;
-    printf("Gravity : ");
-    cin >> gravity;
+    //printf("Initial Force : ");
+    //cin >> initialForce;
+    //printf("Particle Radius : ");
+    //cin >> particle_radius;
+    //printf("Particle Gap : ");
+    //cin >> particle_gap;
+    //printf("Cable Length : ");
+    //cin >> cableLength;
+    //printf("Gravity : ");
+    //cin >> gravity;
 
     // +------------------------ DECLARE SHADERS ------------------------+
     Shader shader("Shaders/solidColorShader.vert", "Shaders/solidColorShader.frag");
@@ -118,8 +118,8 @@ int main(void)
     for (int a = 0; a < 5; a++) anchors[a] = new Object(sphereVAO);
 
     //Cables
-    physics::Cable* cables[5];
-    for (int cable = 0; cable < 5; cable++) cables[cable] = new physics::Cable();
+    physics::Rod* cables[5];
+    for (int cable = 0; cable < 5; cable++) cables[cable] = new physics::Rod();
 
     //Lines
     vector<Line*> lines;
@@ -129,14 +129,14 @@ int main(void)
     terra.gravity = physics::Vector(0, gravity, 0);
 
     // +------------------------ OBJECT INITIALIZATIONS ------------------------+
-    /*float initialForce = -70.0f;
+    float initialForce = -70.0f;
     float particle_radius = 40.0f;
     float particle_gap = 85.0f;
-    float cableLength = 300.0f;*/
+    float cableLength = 300.0f;
 
     for (int i = 0; i<5; i++)
     {
-        spheres[i]->setObjPos(particle_gap * (i-2), cableLength, 0.0f);
+        spheres[i]->setObjPos(particle_gap * (i-2), 0, 0.0f);
         spheres[i]->setMass(50.0f);
         spheres[i]->setRadius(particle_radius);
         spheres[i]->setRestitution(0.9);
@@ -148,10 +148,10 @@ int main(void)
         cables[i]->length = cableLength;
     }
 
-    for (int i = 0; i < 5; i++) {
-        Line* line = new Line(anchors[i], spheres[i]->getParticleAddress());
-        lines.push_back(line);
-    }
+    //for (int i = 0; i < 5; i++) {
+    //    Line* line = new Line(anchors[i], spheres[i]->getParticleAddress());
+    //    lines.push_back(line);
+    //}
     
     // +------------------------ PUSH OBJECTS INTO OBJECT WORLD ------------------------+
     for (Object* obj : spheres) terra.AddObject(obj, true);
@@ -233,7 +233,7 @@ int main(void)
     for (Object* obj : spheres) delete obj;
     for (Object* obj : anchors) delete obj;
 
-    for (physics::Cable* c : cables) delete c;
+    for (physics::Rod* c : cables) delete c;
     for (Line* line : lines) delete line;
 
     glfwTerminate();
