@@ -49,7 +49,7 @@ bool isPaused = false;
 
 // +------------------------+ USER INPUTS +------------------------+
 Object* spheres[PARTICLE_COUNT];
-float initialForce = -70.0f;
+float initialForce = -700.0f;
 float particle_radius = 40.0f;
 float particle_gap = 85.0f;
 float cableLength = 300.0f;
@@ -84,8 +84,8 @@ int main(void)
     glfwSetKeyCallback(window, key_callback);
 
     // skibidii toillet
-    //printf("Initial Force : ");
-    //cin >> initialForce;
+    printf("Initial Force : ");
+    cin >> initialForce;
     //printf("Particle Radius : ");
     //cin >> particle_radius;
     //printf("Particle Gap : ");

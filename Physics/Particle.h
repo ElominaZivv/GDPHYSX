@@ -16,7 +16,7 @@ namespace physics {
 	{
 	protected:
 		bool IsDestroyed = false;
-		float damping = 0.99f;
+		float damping = 0.94f;
 		physics::Vector accumulatedForce = physics::Vector(0, 0, 0);
 
 	public:
