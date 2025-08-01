@@ -43,10 +43,6 @@ using namespace std::chrono_literals;
 // We will call this our time between "frames"
 constexpr::std::chrono::nanoseconds timestep(16ms);
 
-
-// +------------------------+ DEVELOPER STUFFS +------------------------+
-bool isPaused = false;
-
 // +------------------------+ USER INPUTS +------------------------+
 Object* spheres[PARTICLE_COUNT];
 float initialForce = -700.0f;
@@ -56,11 +52,20 @@ float cableLength = 300.0f;
 float gravity = 0;
 
 // +------------------------+ FLAGS +------------------------+
+bool isPaused = false;
 bool spaceWasPressed = false;
+bool wheelHasStopped = false;
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-    if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) spheres[0]->setObjVel(initialForce, 0.0f, 0.0f);
+    if (key == GLFW_KEY_SPACE && action == GLFW_PRESS && !spaceWasPressed){
+        spheres[0]->setObjVel(initialForce, 0.0f, 0.0f);
+        spaceWasPressed = true;
+    }
+
+    if (key == GLFW_KEY_ENTER && action == GLFW_PRESS && wheelHasStopped){
+        printf("eskibidi");
+    }
 }
 
 int main(void)
@@ -205,7 +210,11 @@ int main(void)
 
 
         // +------------------------ UPDATES ------------------------+
-        if (curr_ns >= timestep) // Fixed Updates
+
+        if (spaceWasPressed && spheres[0]->getParticleAddress()->vel.mag()) wheelHasStopped = true;
+
+        // +------------------------ FIXED UPDATE ------------------------+
+        if (curr_ns >= timestep)
         {
             //Convert ns to ms
             auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(curr_ns);
