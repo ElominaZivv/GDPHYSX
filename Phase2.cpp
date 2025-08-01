@@ -55,6 +55,9 @@ float particle_gap = 85.0f;
 float cableLength = 300.0f;
 float gravity = 0;
 
+// +------------------------+ FLAGS +------------------------+
+bool spaceWasPressed = false;
+
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
     if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) spheres[0]->setObjVel(initialForce, 0.0f, 0.0f);
@@ -69,7 +72,7 @@ int main(void)
         return -1;
 
     /* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(800,800, "Phase2_Grouping2_Chen-Elomina-Naranjo", NULL, NULL);
+    window = glfwCreateWindow(800,800, "PCO2 Naranjo", NULL, NULL);
     if (!window)
     {
         glfwTerminate();
