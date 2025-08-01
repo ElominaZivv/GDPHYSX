@@ -57,6 +57,11 @@ bool spaceWasPressed = false;
 bool wheelHasStopped = false;
 bool prizeWasCollected = false;
 
+Object* winningSphere = nullptr;
+string winningText = "\nDefault Win Text!\nYou win a [object].";
+
+// +------------------------+ CODE +------------------------+
+
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
     if (key == GLFW_KEY_SPACE && action == GLFW_PRESS && !spaceWasPressed){
@@ -64,8 +69,8 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
         spaceWasPressed = true;
     }
 
-    if (key == GLFW_KEY_ENTER && action == GLFW_PRESS && wheelHasStopped && !prizeWasCollected){
-        printf("eskibidi");
+    if (key == GLFW_KEY_ENTER && action == GLFW_PRESS && wheelHasStopped){
+        printf("%s", winningText);
         isPaused = true;
         prizeWasCollected = true;
     }
@@ -157,6 +162,12 @@ int main(void)
     spheres[3]->setObjPos(cableLength * cos(radians(126.f)), cableLength * sin(radians(126.f)), 0);
     spheres[4]->setObjPos(cableLength * cos(radians(198.f)), cableLength * sin(radians(198.f)), 0);
 
+    spheres[0]->setColor(255, 0, 0);
+    spheres[1]->setColor(255, 165, 0);
+    spheres[2]->setColor(255, 255, 0);
+    spheres[3]->setColor(0, 255, 0);
+    spheres[4]->setColor(0, 0, 255);
+
     for (int i = 0; i<PARTICLE_COUNT; i++)
     {
         /*spheres[i]->setObjPos(particle_gap * (i-2), 0, 0.0f);*/
@@ -230,6 +241,17 @@ int main(void)
             {
                 float deltaTime = (float)ms.count() / 1000;
                 terra.Update(deltaTime);
+            }
+            else{
+                for(int i = 0; i < PARTICLE_COUNT; i++){
+                    if (spheres[i]->getObjPos().y > spheres[(i+1) % PARTICLE_COUNT]->getObjPos().y) winningSphere = spheres[i];
+                }
+
+                if (spheres[0] == winningSphere) winningText = "\nCongratulations!\nYou win an Impostor!";
+                if (spheres[1] == winningSphere) winningText = "\nCongratulations!\nYou win a Garfield!";
+                if (spheres[2] == winningSphere) winningText = "\nCongratulations!\nYou win a Fluttershy!";
+                if (spheres[3] == winningSphere) winningText = "\nCongratulations!\nYou win a Luigi!";
+                if (spheres[4] == winningSphere) winningText = "\nCongratulations!\nYou win a Mega Man!";
             }
         }
 
