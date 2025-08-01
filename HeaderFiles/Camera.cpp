@@ -78,10 +78,10 @@ void Camera::getUserInput(GLFWwindow* window) {
 		if (thetaY < 89.0f) thetaY += 0.1f;
 	}
 	if (glfwGetKey(window, GLFW_KEY_Q)) {
-		distance += 1.f;
+		distance += 0.125f;
 	}
 	if (glfwGetKey(window, GLFW_KEY_E)) {
-		distance -= 1.f;
+		distance -= 0.125f;
 	}
 
 	// 3rd person camera movement (Thin Matrix, 2024)

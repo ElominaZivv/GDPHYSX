@@ -48,7 +48,7 @@ constexpr::std::chrono::nanoseconds timestep(16ms);
 
 
 // +------------------------+ DEVELOPER STUFFS +------------------------+
-bool isPaused = true;
+bool isPaused = false;
 
 
 // +------------------------+ USER INPUTS +------------------------+
@@ -66,7 +66,7 @@ int main(void)
         return -1;
 
     /* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(700,700, "Nows your chance to be a [[Big Shot]] ! ! !", NULL, NULL);
+    window = glfwCreateWindow(700,700, "The Knight meets the unstoppable chariot", NULL, NULL);
     if (!window)
     {
         glfwTerminate();
@@ -92,7 +92,7 @@ int main(void)
     //auto sphereVAO = make_shared<VAO>("3D/plane.obj");
 
     // +------------------------ DECLARE TEXTURE ------------------------+
-    auto texture = make_shared<Texture>("Textures/Back.png");
+    auto texture = make_shared<Texture>("Textures/SlimAsgore_5x5.png");
 
     // +------------------------ DECLARE CAMERA ------------------------+
     float windowWidth = 700.0f;
@@ -107,7 +107,7 @@ int main(void)
     ObjectWorld terra;
 
     // +------------------------ OBJECT INITIALIZATIONS ------------------------+
-    sphere1.setObjPos(0.0, 0, 0.0);
+    sphere1.setObjPos(40.0, 0, 0.0);
     sphere1.setMass(10.0f);
     sphere1.setObjVel(0, 0, 0);
     sphere1.setRadius(10.f);
@@ -118,7 +118,7 @@ int main(void)
         physics::Vector(0, -10, 0)
     );
 
-    sphere2.setObjPos(-50.0, 0.0, 0.0);
+    sphere2.setObjPos(-10.0, 0.0, 0.0);
     sphere2.setMass(10.f);
     sphere2.setObjVel(0, 0, 0);
     sphere2.setRadius(10.f);
