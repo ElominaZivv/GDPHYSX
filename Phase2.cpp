@@ -55,6 +55,7 @@ float gravity = 0;
 bool isPaused = false;
 bool spaceWasPressed = false;
 bool wheelHasStopped = false;
+bool prizeWasCollected = false;
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
@@ -63,8 +64,10 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
         spaceWasPressed = true;
     }
 
-    if (key == GLFW_KEY_ENTER && action == GLFW_PRESS && wheelHasStopped){
+    if (key == GLFW_KEY_ENTER && action == GLFW_PRESS && wheelHasStopped && !prizeWasCollected){
         printf("eskibidi");
+        isPaused = true;
+        prizeWasCollected = true;
     }
 }
 
@@ -211,7 +214,7 @@ int main(void)
 
         // +------------------------ UPDATES ------------------------+
 
-        if (spaceWasPressed && spheres[0]->getParticleAddress()->vel.mag()) wheelHasStopped = true;
+        if (spaceWasPressed && spheres[0]->getParticleAddress()->vel.mag() < 0.5f) wheelHasStopped = true;
 
         // +------------------------ FIXED UPDATE ------------------------+
         if (curr_ns >= timestep)
