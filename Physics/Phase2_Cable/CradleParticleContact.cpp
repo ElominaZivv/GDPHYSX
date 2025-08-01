@@ -47,9 +47,9 @@ namespace physics
 
 		
 		//For VectorB but in the opposite direction
-		Vector V_b = impulse * ((float)-1 / particles[1]->mass);
+		/*Vector V_b = impulse * ((float)-1 / particles[1]->mass);*/
 		//			Vf	  =		Vi			  +	I/m
-		particles[1]->vel = particles[1]->vel + V_b;
+		/*particles[1]->vel = particles[1]->vel + V_b;*/
 		
 	}
 

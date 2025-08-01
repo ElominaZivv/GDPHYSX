@@ -3,6 +3,7 @@
 #include <memory>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <cmath>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -34,6 +35,7 @@
 using namespace std;
 using namespace glm;
 
+const int PARTICLE_COUNT = 5;
 
 // +------------------------+ TIME LIBRARIES +------------------------+
 #include<chrono>
@@ -46,7 +48,7 @@ constexpr::std::chrono::nanoseconds timestep(16ms);
 bool isPaused = false;
 
 // +------------------------+ USER INPUTS +------------------------+
-Object* spheres[5];
+Object* spheres[PARTICLE_COUNT];
 float initialForce = -70.0f;
 float particle_radius = 40.0f;
 float particle_gap = 85.0f;
@@ -111,15 +113,19 @@ int main(void)
     // +------------------------ DECLARE OBJECTS ------------------------+
     // Spheres
     /*Object* spheres[5];*/
-    for (int sphere = 0; sphere < 5; sphere++) spheres[sphere] = new Object(sphereVAO);
+    for (int sphere = 0; sphere < PARTICLE_COUNT; sphere++) spheres[sphere] = new Object(sphereVAO);
     
     // Anchor
-    Object* anchors[5];
-    for (int a = 0; a < 5; a++) anchors[a] = new Object(sphereVAO);
+    Object* anchors[PARTICLE_COUNT];
+    for (int a = 0; a < PARTICLE_COUNT; a++) anchors[a] = new Object(sphereVAO);
 
     //Cables
-    physics::Rod* cables[5];
-    for (int cable = 0; cable < 5; cable++) cables[cable] = new physics::Rod();
+    physics::Cable* cables[PARTICLE_COUNT];
+    for (int cable = 0; cable < PARTICLE_COUNT; cable++) cables[cable] = new physics::Cable();
+
+    // Rods
+    physics::Rod* rods[PARTICLE_COUNT];
+    for (int i = 0; i < PARTICLE_COUNT; i++) rods[i] = new physics::Rod();
 
     //Lines
     vector<Line*> lines;
@@ -134,14 +140,24 @@ int main(void)
     float particle_gap = 85.0f;
     float cableLength = 300.0f;
 
-    for (int i = 0; i<5; i++)
+    spheres[0]->setObjPos(cableLength * cos(radians(270.f)), cableLength * sin(radians(270.f)), 0);
+    spheres[1]->setObjPos(cableLength * cos(radians(342.f)), cableLength * sin(radians(342.f)), 0);
+    spheres[2]->setObjPos(cableLength * cos(radians(54.f)), cableLength * sin(radians(54.f)), 0);
+    spheres[3]->setObjPos(cableLength * cos(radians(126.f)), cableLength * sin(radians(126.f)), 0);
+    spheres[4]->setObjPos(cableLength * cos(radians(198.f)), cableLength * sin(radians(198.f)), 0);
+
+    for (int i = 0; i<PARTICLE_COUNT; i++)
     {
-        spheres[i]->setObjPos(particle_gap * (i-2), 0, 0.0f);
+        /*spheres[i]->setObjPos(particle_gap * (i-2), 0, 0.0f);*/
         spheres[i]->setMass(50.0f);
         spheres[i]->setRadius(particle_radius);
-        spheres[i]->setRestitution(0.9);
+        spheres[i]->setRestitution(1);
 
-        anchors[i]->setObjPos(particle_gap * (i - 2), cableLength, 0.0f);
+        rods[i]->particles[0] = spheres[i]->getParticleAddress();
+        rods[i]->particles[1] = spheres[(i+1) % PARTICLE_COUNT]->getParticleAddress();
+        rods[i]->length = cableLength * 1.2084014531188;
+
+        anchors[i]->setObjPos(0, 0, 0.0f);
         anchors[i]->setRadius(5.0f);
         cables[i]->particles[0] = spheres[i]->getParticleAddress();
         cables[i]->particles[1] = anchors[i]->getParticleAddress();
@@ -156,7 +172,8 @@ int main(void)
     // +------------------------ PUSH OBJECTS INTO OBJECT WORLD ------------------------+
     for (Object* obj : spheres) terra.AddObject(obj, true);
     for (Object* obj : anchors) terra.AddObject(obj, false);
-    for (int n = 0; n < 5; n++) terra.Links.push_back(cables[n]);
+    for (int n = 0; n < PARTICLE_COUNT; n++) terra.Links.push_back(rods[n]);
+    for (int n = 0; n < PARTICLE_COUNT; n++) terra.Links.push_back(cables[n]);
 
     // +------------------------ TIME ------------------------+
     //Initialize the clock and variables
@@ -181,7 +198,7 @@ int main(void)
 
         //Add the duration since the last iteration
         //to the time since our last "frame"
-        curr_ns += dur;
+        curr_ns += dur*8;
 
 
         // +------------------------ UPDATES ------------------------+
@@ -233,7 +250,7 @@ int main(void)
     for (Object* obj : spheres) delete obj;
     for (Object* obj : anchors) delete obj;
 
-    for (physics::Rod* c : cables) delete c;
+    for (physics::Cable* c : cables) delete c;
     for (Line* line : lines) delete line;
 
     glfwTerminate();
