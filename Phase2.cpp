@@ -44,18 +44,29 @@ constexpr::std::chrono::nanoseconds timestep(16ms);
 
 // +------------------------+ DEVELOPER STUFFS +------------------------+
 bool isPaused = false;
+bool spin = false;
+bool stop = false;
 
-// +------------------------+ USER INPUTS +------------------------+
+// +------------------------+ INITIALS +------------------------+
+ObjectWorld terra;
 Object* spheres[5];
-float initialForce = -70.0f;
-float particle_radius = 40.0f;
-float particle_gap = 85.0f;
+float initialForce = 0;
+float particle_radius = 50.f;
 float cableLength = 300.0f;
-float gravity = -9.8f;
+const double PI = 3.14159265358979323846;
+float orientation = PI/2;
+string prize;
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-    if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) spheres[0]->setObjVel(initialForce, 0.0f, 0.0f);
+    if (key == GLFW_KEY_ENTER && action == GLFW_PRESS && !spin) {
+        spheres[0]->setObjVel(initialForce, 0.0f, 0.0f);
+        spin = true;
+    }
+    if (key == GLFW_KEY_ENTER && action == GLFW_PRESS && stop && spin) {
+        prize = terra.checkPrize();
+        cout << "You Won " << prize;
+    }
 }
 
 int main(void)
@@ -67,7 +78,7 @@ int main(void)
         return -1;
 
     /* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(800,800, "Phase2_Grouping2_Chen-Elomina-Naranjo", NULL, NULL);
+    window = glfwCreateWindow(800,800, "PC02-Chen", NULL, NULL);
     if (!window)
     {
         glfwTerminate();
@@ -82,16 +93,8 @@ int main(void)
     glfwSetKeyCallback(window, key_callback);
 
     // skibidii toillet
-    printf("Initial Force : ");
+    printf("Force : ");
     cin >> initialForce;
-    printf("Particle Radius : ");
-    cin >> particle_radius;
-    printf("Particle Gap : ");
-    cin >> particle_gap;
-    printf("Cable Length : ");
-    cin >> cableLength;
-    printf("Gravity : ");
-    cin >> gravity;
 
     // +------------------------ DECLARE SHADERS ------------------------+
     Shader shader("Shaders/solidColorShader.vert", "Shaders/solidColorShader.frag");
@@ -114,8 +117,8 @@ int main(void)
     for (int sphere = 0; sphere < 5; sphere++) spheres[sphere] = new Object(sphereVAO);
     
     // Anchor
-    Object* anchors[5];
-    for (int a = 0; a < 5; a++) anchors[a] = new Object(sphereVAO);
+    Object* anchor;
+    anchor = new Object(sphereVAO);
 
     //Cables
     physics::Cable* cables[5];
@@ -124,39 +127,65 @@ int main(void)
     //Lines
     vector<Line*> lines;
 
-    // +------------------------ DECLARE OBJECT WORLD ------------------------+
-    ObjectWorld terra;
-    terra.gravity = physics::Vector(0, gravity, 0);
+    //Rods
+    physics::Rod* rods[5];
+    for (int rod = 0; rod < 5; rod++) rods[rod] = new physics::Rod();
 
+    
     // +------------------------ OBJECT INITIALIZATIONS ------------------------+
-    /*float initialForce = -70.0f;
-    float particle_radius = 40.0f;
-    float particle_gap = 85.0f;
-    float cableLength = 300.0f;*/
+
+    terra.gravity = physics::Vector(0, 0, 0);
+    
+    anchor->setObjPos(0, 0, 0);
+    anchor->setColor(1, 1, 1);
 
     for (int i = 0; i<5; i++)
     {
-        spheres[i]->setObjPos(particle_gap * (i-2), cableLength, 0.0f);
+
         spheres[i]->setMass(50.0f);
         spheres[i]->setRadius(particle_radius);
         spheres[i]->setRestitution(0.9);
+        // Formula used https://math.stackexchange.com/questions/1990504/how-to-find-the-coordinates-of-the-vertices-of-a-pentagon-centered-at-the-origin
+        float angle = orientation + i * 2 * PI / 5;
+        spheres[i]->setObjPos(cableLength * cos(angle), cableLength * sin(angle), 0.f);
 
-        anchors[i]->setObjPos(particle_gap * (i - 2), cableLength, 0.0f);
-        anchors[i]->setRadius(5.0f);
         cables[i]->particles[0] = spheres[i]->getParticleAddress();
-        cables[i]->particles[1] = anchors[i]->getParticleAddress();
+        cables[i]->particles[1] = anchor->getParticleAddress();
         cables[i]->length = cableLength;
+
+       
+        rods[i]->particles[0] = spheres[i]->getParticleAddress();
+        rods[i]->particles[1] = spheres[(i+1)%5]->getParticleAddress();
+        rods[i]->length = 352.67; //length from distance formula
     }
 
     for (int i = 0; i < 5; i++) {
-        Line* line = new Line(anchors[i], spheres[i]->getParticleAddress());
+        Line* line = new Line(anchor, spheres[i]->getParticleAddress());
         lines.push_back(line);
     }
-    
+
+    spheres[0]->setColor(1, 0, 0);
+    spheres[0]->setPrize("Red: Red Shoes");
+
+    spheres[1]->setColor(2, 1, 0);
+    spheres[1]->setPrize("Orange: Coins");
+
+    spheres[2]->setColor(1, 1, 0);
+    spheres[2]->setPrize("Yellow: Yellow Shoes");
+
+    spheres[3]->setColor(0, 1, 0);
+    spheres[3]->setPrize("Green: Green Shoes");
+
+    spheres[4]->setColor(0, 0, 1);
+    spheres[4]->setPrize("Blue: Blue Shoes");
+
+    cout << "____________________" << endl << "Prizes" << endl << "____________________" << endl;
+    cout << "Red: Red Shoes" << endl << "Orange: Coins" << endl << "Yellow: Yellow Shoes" << endl << "Green: Green Shoes" << endl << "Blue: Blue Shoes" << endl << "____________________" << endl;
     // +------------------------ PUSH OBJECTS INTO OBJECT WORLD ------------------------+
     for (Object* obj : spheres) terra.AddObject(obj, true);
-    for (Object* obj : anchors) terra.AddObject(obj, false);
+    terra.AddObject(anchor, false);
     for (int n = 0; n < 5; n++) terra.Links.push_back(cables[n]);
+    for (int n = 0; n < 5; n++) terra.Links.push_back(rods[n]);
 
     // +------------------------ TIME ------------------------+
     //Initialize the clock and variables
@@ -211,12 +240,18 @@ int main(void)
             lines[i]->update();
         }
 
+        if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
+            terra.addDamping();
+        }
+
+        stop = terra.checkStop(spin);
         // +------------------------ RENDER ------------------------+
         // Clear Screen
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // Render all objects
         terra.Render(shader, generalCamera);
+
         for (auto& line : lines) {
             line->draw(shader, generalCamera);
         }
@@ -231,10 +266,10 @@ int main(void)
     }
     //Delete Spheres, Anchors, and Cables
     for (Object* obj : spheres) delete obj;
-    for (Object* obj : anchors) delete obj;
-
+    delete anchor;
     for (physics::Cable* c : cables) delete c;
     for (Line* line : lines) delete line;
+    for (physics::Rod* r : rods) delete r;
 
     glfwTerminate();
     return 0;

@@ -80,7 +80,7 @@ namespace physics
 		//Translate a
 		particles[0]->pos += P_a;
 
-		/*
+		
 		if (particles[1])
 		{
 			//Get in the change in position of the second particle
@@ -88,7 +88,7 @@ namespace physics
 			//Translate b
 			particles[1]->pos += P_b;
 		}
-		*/
+		
 
 		//Assume the interpenetration was resolved and set depth to 0
 		depth = 0;

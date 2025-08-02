@@ -140,6 +140,49 @@ void ObjectWorld::UpdateObjectList()
 
 }
 
+void ObjectWorld::addDamping() {
+	for (std::list<Object*>::iterator obj = Objects.begin();
+		obj != Objects.end();
+		obj++
+		)
+	{
+		if((*obj)->getParticleAddress()->getDamping() > 0.02)
+			(*obj)->getParticleAddress()->decreaseDamping();
+	}
+}
+
+bool ObjectWorld::checkStop(bool spin) {
+
+	if(spin)
+	{
+		for (std::list<Object*>::iterator obj = Objects.begin();
+			obj != Objects.end();
+			obj++
+			)
+		{
+			if ((*obj)->getParticleAddress()->vel.mag() <= 1.f)
+				return true;
+			else
+				return false;
+		}
+	}
+}
+
+string ObjectWorld::checkPrize() {
+	float highest = 0;
+	Object* top = new Object();
+	for (std::list<Object*>::iterator obj = Objects.begin();
+		obj != Objects.end();
+		obj++
+		)
+	{
+		if ((*obj)->getObjPos().y > highest) {
+			highest = (*obj)->getObjPos().y;
+			top = *obj;
+		}
+	}
+	return top->getPrize();
+}
 //Silly Functions
 void ObjectWorld::atCenter()
 {

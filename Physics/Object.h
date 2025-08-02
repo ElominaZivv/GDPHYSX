@@ -21,6 +21,7 @@ private:
 	physics::P6Particle particle;
 	//	Phase2
 	float radius;
+	string prize;
 
 public:
 	//Constructor
@@ -46,6 +47,7 @@ public:
 	void setObjAcc(float x, float y, float z);
 	void destroy();
 	void setRestitution(float _restitution);
+	void setPrize(string prize);
 
 	//Physics
 	void addForce(physics::Vector force);
@@ -56,6 +58,7 @@ public:
 	float GetRadius();
 	float GetRestitution();
 	bool isDestroyed();
+	string getPrize();
 };
 
 #endif

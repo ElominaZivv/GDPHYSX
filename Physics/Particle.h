@@ -34,6 +34,8 @@ namespace physics {
 		void updateVel(float dTime);
 
 	public:
+		void decreaseDamping();
+		float getDamping();
 		void update(float dTime);
 		void destroy();
 		bool isDestroyed();

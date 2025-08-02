@@ -42,7 +42,9 @@ public:
 
 	//Silly Functions
 	void atCenter();
-	
+	void addDamping();
+	bool checkStop(bool spin);
+	string checkPrize();
 	// Put it here for now to modify it
 	physics::GravityForceGenerator gravity = physics::GravityForceGenerator(physics::Vector(0, -9.8f, 0));
 

@@ -19,8 +19,6 @@ void Object::update(float dTime)
 	particle.update(dTime);
 	//Set the position of the model to the position of its particle component
 	model3D->modelPos = vec3(particle.pos);
-
-	MySillyFunctionThatChangesTheColorOfTheParticleBasedOnItsSpeed();
 }
 
 void Object::render(Shader shader, Camera camera)
@@ -56,7 +54,7 @@ void Object::MySillyFunctionThatChangesTheColorOfTheParticleBasedOnItsSpeed()
 
 void Object::setColor(float r, float g, float b)
 {
-	model3D->color = vec3(r, g, b);
+	model3D->color = normalize(vec3(r, g, b));
 }
 
 void Object::setRadius(float _radius)
@@ -91,6 +89,10 @@ void Object::setRestitution(float _restitution)
 	particle.restitution = _restitution;
 }
 
+void Object::setPrize(string p) {
+	prize = p;
+}
+
 void Object::destroy()
 {
 	particle.destroy();
@@ -119,6 +121,9 @@ float Object::GetRadius()
 float Object::GetRestitution()
 {
 	return particle.restitution;
+}
+string Object::getPrize() {
+	return prize;
 }
 
 bool Object::isDestroyed() { return particle.isDestroyed(); }
