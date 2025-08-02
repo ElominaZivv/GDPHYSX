@@ -44,7 +44,7 @@ constexpr::std::chrono::nanoseconds timestep(16ms);
 
 // +------------------------+ DEVELOPER STUFFS +------------------------+
 bool isPaused = false;
-bool spin = false;
+bool firstSpin = false;
 bool stop = false;
 
 // +------------------------+ INITIALS +------------------------+
@@ -59,11 +59,11 @@ string prize;
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-    if (key == GLFW_KEY_ENTER && action == GLFW_PRESS && !spin) {
+    if (key == GLFW_KEY_ENTER && action == GLFW_PRESS && !firstSpin) {
         spheres[0]->setObjVel(initialForce, 0.0f, 0.0f);
-        spin = true;
+        firstSpin = true;
     }
-    if (key == GLFW_KEY_ENTER && action == GLFW_PRESS && stop && spin) {
+    if (key == GLFW_KEY_ENTER && action == GLFW_PRESS && stop) {
         prize = terra.checkPrize();
         cout << "You Won " << prize;
     }
@@ -244,7 +244,7 @@ int main(void)
             terra.addDamping();
         }
 
-        stop = terra.checkStop(spin);
+        stop = terra.checkStop(firstSpin);
         // +------------------------ RENDER ------------------------+
         // Clear Screen
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
