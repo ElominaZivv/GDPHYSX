@@ -157,7 +157,7 @@
     <ClCompile Include="HeaderFiles\Shader.cpp" />
     <ClCompile Include="HeaderFiles\tiny_obj_loader.cpp" />
     <ClCompile Include="HeaderFiles\VAO.cpp" />
-    <ClCompile Include="Phase2.cpp" />
+    <ClCompile Include="PC02.cpp" />
     <ClCompile Include="Physics\ContactResolver.cpp" />
     <ClCompile Include="Physics\DragForceGenerator.cpp" />
     <ClCompile Include="Physics\ForceGenerator.cpp" />
